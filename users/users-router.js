@@ -79,7 +79,7 @@ router.post("/", restricted, validateData, (req, res, next) => {
     })
     .catch(next)
 })
-router.delete("/:id", restricted, validateData, validateId, (req, res, next) => {
+router.delete("/:id", restricted, validateId, (req, res, next) => {
 
   // console.log('users get /')
   // console.log(req.jwt)
@@ -92,6 +92,7 @@ router.delete("/:id", restricted, validateData, validateId, (req, res, next) => 
       // console.log(users)
 
       if (users) {
+        //todo: take away the returning password
         res.status(200).json(users)
       } else {
         res.status(404).json({ message: 'no user comments found' })
@@ -123,12 +124,12 @@ function validateData(req, res, next) {
 }
 
 function validateId (req, res, next) {
-  Users.findById(req.params.id)
-    .then(([user]) => {
+  Users.deleteUser(req.params.id)
+    .then((user) => {
       if (user) {
-        res.status(404).json({error: `Email not unique`})
-      } else {
         next()
+      } else {
+        res.status(404).json({error: `Invalid ID`})
       }
     })
     .catch(next)

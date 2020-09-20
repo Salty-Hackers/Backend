@@ -5,21 +5,11 @@ module.exports = {
     find,
     findBy,
     findById,
-    deleteUser,
 }
 
-async function deleteUser(id) {
-    try {
-        await db("comments")
-            .where({ id })
-            .del()
-        return findById(id)
-    } catch (error) {
-        throw error
 
-    }
 
-}
+
 function find() {
     return db("comments").select('*').orderBy("id")
 }

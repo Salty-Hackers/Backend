@@ -7,6 +7,8 @@ module.exports = {
   findById,
   findUsersComments,
   findAUserComments,
+  deleteUser,
+
 }
 
 function findAUserComments (id) {
@@ -16,7 +18,16 @@ function findAUserComments (id) {
     .orderBy("u.id")
     .where({ 'u.id' :id })
 }
+async function deleteUser(id) {
+  try {
+      await db("comments")
+          .where({ id })
+          .del()
+      return findById(id)
+  } catch (error) {
+      throw error
 
+  }}
 function findUsersComments() {
   return db("users as u")
     .select("u.id", 'c.negativity as negativityScore', 'c.comment')
