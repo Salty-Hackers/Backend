@@ -5,12 +5,19 @@ module.exports = {
   find,
   findBy,
   findById,
-  usersComments,
+  findUsersComments,
+  findUserComments,
 }
 
+function findUserComments (id) {
+  return db("users as u")
+    .select("u.id", 'c.negativity as negativityScore', 'c.comment')
+    .join('comments as c', 'u.id', 'c.user_id')
+    .orderBy("u.id")
+    .where({ id })
+}
 
-
-function usersComments() {
+function findUsersComments() {
   return db("users as u")
     .select("u.id", 'c.negativity as negativityScore', 'c.comment')
     .join('comments as c', 'u.id', 'c.user_id')
@@ -42,5 +49,7 @@ async function add(user) {
 }
 
 function findById(id) {
-  return db("users").where({ id }).first()
+  return db("users")
+  .where({ id })
+  .first()
 }
