@@ -13,7 +13,6 @@ exports.up = function (knex) {
             .index()
         users.text('password')
             .notNullable()
-            .unique()
             .index()
 
     })
@@ -22,10 +21,9 @@ exports.up = function (knex) {
 
             comments.text('comment')
                 .notNullable()
-                .index()
-            comments.text('negativity')
+            comments.integer('negativity')
                 .notNullable()
-                .index()
+                .unsigned()
             comments.integer('user_id')
                 .unsigned()
                 .notNullable()
