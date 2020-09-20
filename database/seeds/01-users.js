@@ -2,9 +2,12 @@ const faker = require('faker')
 faker.seed(4321)
 const bcryptjs = require("bcryptjs")
 
+// todo: add process.env.BCRYPT_ROUNDS || 8
+
+
 exports.seed = function (knex) {
     // 000-cleanup.js already cleaned out all tables
-
+    // changing faker.internet.password() for `testpassword`
     let users = [
         {
           first_name: faker.name.firstName(),
