@@ -69,25 +69,37 @@ router.post("/", restricted, validateData, (req, res, next) => {
   // console.log(req.jwt.department)
 
   Users.add(req.body)
-    .then(users => {
+    .then(() => {
 
       // console.log(`inside findBy`)
       // console.log(users)
 
-      if (users.length) {
-        res.status(200).json(users)
-      } else {
-        res.status(404).json({ message: 'no users at the moment' })
-      }
+      res.status(201).end()
+
     })
     .catch(next)
 })
 
-function validateData (req, res, next) {
+async function validateData(req, res, next) {
+
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
-      res.status(404).json({error: `first_name, last_name, email, and password are require`})
+    res.status(404).json({ error: `first_name, last_name, email, and password are require` })
   }
-  next()
+
+  const email = {
+    email: req.body.email
+  }
+  Users.findBy(email)
+    .then(([user]) => {
+      if (user) {
+        res.status(404).json({error: `Email not unique`})
+      } else {
+        next()
+      }
+    })
+    .catch(next)
+
+
 }
 
 module.exports = router
