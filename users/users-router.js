@@ -43,7 +43,7 @@ router.get('/comments', restricted, (req, res, next) => {
     })
     .catch(next)
 })
-router.get('/:id', restricted, (req, res, next) => {
+router.get('/:id', restricted, validateId, (req, res, next) => {
   // console.log('users get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
@@ -79,8 +79,28 @@ router.post("/", restricted, validateData, (req, res, next) => {
     })
     .catch(next)
 })
+router.delete("/:id", restricted, validateData, validateId, (req, res, next) => {
 
-async function validateData(req, res, next) {
+  // console.log('users get /')
+  // console.log(req.jwt)
+  // console.log(req.jwt.department)
+
+  Users.deleteUser(req.params.id)
+    .then((users) => {
+
+      // console.log(`inside findBy`)
+      // console.log(users)
+
+      if (users) {
+        res.status(200).json(users)
+      } else {
+        res.status(404).json({ message: 'no user comments found' })
+      }
+    })
+    .catch(next)
+})
+
+function validateData(req, res, next) {
 
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
     res.status(404).json({ error: `first_name, last_name, email, and password are require` }) 
@@ -102,4 +122,15 @@ async function validateData(req, res, next) {
 
 }
 
+function validateId (req, res, next) {
+  Users.findById(req.params.id)
+    .then(([user]) => {
+      if (user) {
+        res.status(404).json({error: `Email not unique`})
+      } else {
+        next()
+      }
+    })
+    .catch(next)
+}
 module.exports = router
