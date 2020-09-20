@@ -21,6 +21,7 @@ exports.up = function (knex) {
 
             comments.text('comment')
                 .notNullable()
+            //better name is negativityScore
             comments.integer('negativity')
                 .notNullable()
                 .unsigned()
