@@ -3,43 +3,43 @@ const router = require("express").Router()
 const Comments = require("./comments-model")
 const restricted = require("../auth/authenticate-middleware")
 
-// users endpoints
+// Comments endpoints
 router.get("/", restricted, (req, res, next) => {
 
-  // console.log('users get /')
+  // console.log('comments get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
   Comments.find()
-    .then(users => {
+    .then(comments => {
 
       // console.log(`inside findBy`)
-      // console.log(users)
+      // console.log(comments)
 
-      if (users.length) {
-        res.status(200).json(users)
+      if (comments.length) {
+        res.status(200).json(comments)
       } else {
-        res.status(404).json({ message: 'no users at the moment' })
+        res.status(404).json({ message: 'no comments found' })
       }
     })
     .catch(next)
 })
 
 router.get('/:id', restricted, validateId, (req, res, next) => {
-  // console.log('users get /')
+  // console.log('Comments get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
   Comments.findById(req.params.id)
-    .then((users) => {
+    .then((comment) => {
 
-      console.log(`inside findBy`)
-      console.log(users)
+      // console.log(`inside findBy`)
+      // console.log(comment)
 
-      if (users) {
-        res.status(200).json(users)
+      if (comment) {
+        res.status(200).json(comment)
       } else {
-        res.status(404).json({ message: 'no user comments found' })
+        res.status(404).json({ message: 'no comment found' })
       }
     })
     .catch(next)
@@ -50,7 +50,7 @@ router.post('/', restricted, validateData, (req, res, next) => {
     .then((addedComment) => {
 
       //   console.log(`inside findBy`)
-      //   console.log(users)
+      //   console.log(addedComment)
 
       if (addedComment) {
         res.status(200).json(addedComment)
@@ -62,15 +62,15 @@ router.post('/', restricted, validateData, (req, res, next) => {
 })
 router.delete("/:id", restricted, validateId, (req, res, next) => {
 
-  // console.log('users get /')
+  // console.log('Comments get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
-  Users.deleteUser(req.params.id)
+  Comments.deleteUser(req.params.id)
     .then((deleteComment) => {
 
       // console.log(`inside findBy`)
-      // console.log(users)
+      // console.log(deleteComment)
 
       //take away the returning password
       deletedUser.password = ``
@@ -80,8 +80,8 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
     .catch(next)
 })
 
-router.put("/:id", restricted, validateId, (req, res, next) => {
-
+router.put("/:id", restricted, validateData, validateId, (req, res, next) => {
+  Comments
 })
 
 // local middleware
@@ -92,7 +92,7 @@ function validateData(req, res, next) {
   next()
 }
 function validateId(req, res, next) {
-  Users.deleteUser(req.params.id)
+  Comments.deleteUser(req.params.id)
     .then((comment) => {
       if (comment) {
         next()
