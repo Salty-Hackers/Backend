@@ -77,17 +77,13 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
   req.user.password = ``
 
   Users.deleteUser(req.params.id)
-    .then((deletedUserComments) => {
+    .then(() => {
 
       // console.log(`inside deleteUser`)
       // console.log(DeleteUser)
 
-      res.status(200).json(
-        {
-          deletedUserData: {
-            user: req.user,
-            comments: deletedUserComments
-          }
+      res.status(200).json({
+          message: `The user and their messages have been deleted.`
         })
 
     })
