@@ -74,14 +74,17 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
 
       //take away the returning password
       deletedUser.password = ``
-      res.status(200).json({message: `Comment successfully delete.`, deleteComment: deleteComment} )
+      res.status(200).json({deleteComment} )
 
     })
     .catch(next)
 })
 
 router.put("/:id", restricted, validateData, validateId, (req, res, next) => {
-  Comments
+  Comments.updateComment
+    .then(updateComment => {
+        res.status(200).json({updateComment})
+    })
 })
 
 // local middleware
