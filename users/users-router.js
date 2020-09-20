@@ -43,26 +43,33 @@ router.get('/comments', restricted, (req, res, next) => {
     })
     .catch(next)
 })
-router.get('/:id', restricted, validateId, (req, res, next) => {
+router.get('/:id/comments', restricted, validateId, (req, res, next) => {
   // console.log('users get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
-  Users.findAUserComments(req.params.id)
-    .then((users) => {
+  Users.findAUserCommentsById(req.params.id)
+    .then(users => {
 
-      console.log(`inside findBy`)
-      console.log(users)
+      // console.log(`inside findBy`)
+      // console.log(users)
 
-      if (users) {
+      if (users.length) {
         res.status(200).json(users)
       } else {
-        res.status(404).json({ message: 'no user comments found' })
+        res.status(404).json({ message: 'User has no comment' })
       }
     })
     .catch(next)
 })
-router.post("/", restricted, validateData, (req, res, next) => {
+router.get('/:id', restricted, validateId, (req, res, next) => {
+  // console.log('users get /')
+
+  res.status(200).json(req.user)
+
+
+})
+router.post("/", restricted, validateEntryData, (req, res, next) => {
 
   // console.log('users get /')
   // console.log(req.jwt)
@@ -85,26 +92,41 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
+  //take away the returning password
+  req.user.password = ``
+
   Users.deleteUser(req.params.id)
-    .then((users) => {
+    .then(() => {
 
-      // console.log(`inside findBy`)
-      // console.log(users)
+      // console.log(`inside deleteUser`)
+      // console.log(DeleteUser)
 
-      if (users) {
-        //todo: take away the returning password
-        res.status(200).json(users)
-      } else {
-        res.status(404).json({ message: 'no user comments found' })
-      }
+      res.status(200).json({
+          message: `The user and their messages have been deleted.`
+        })
+
+    })
+    .catch(next)
+})
+router.put("/:id", restricted, validateUpdateData, validateId, (req, res, next) => {
+  Users.updateUser(req.params.id, req.body)
+    .then(updatedUser => {
+      updatedUser.password = ``
+        res.status(200).json({updatedUser})
     })
     .catch(next)
 })
 
-function validateData(req, res, next) {
+function validateUpdateData (req, res, next) {
+  if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
+    res.status(404).json({ error: `first_name, last_name, email, and password are require` })
+  }
+  next()
+}
+function validateEntryData(req, res, next) {
 
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
-    res.status(404).json({ error: `first_name, last_name, email, and password are require` }) 
+    res.status(404).json({ error: `first_name, last_name, email, and password are require` })
   }
 
   const email = {
@@ -113,7 +135,7 @@ function validateData(req, res, next) {
   Users.findBy(email)
     .then(([user]) => {
       if (user) {
-        res.status(404).json({error: `Email not unique`})
+        res.status(404).json({ error: `Email not unique` })
       } else {
         next()
       }
@@ -123,13 +145,15 @@ function validateData(req, res, next) {
 
 }
 
-function validateId (req, res, next) {
-  Users.deleteUser(req.params.id)
+function validateId(req, res, next) {
+  Users.findById(req.params.id)
     .then((user) => {
       if (user) {
+        //get users store and pass it down to the other router so they don't have to make a 2 call
+        req.user = user
         next()
       } else {
-        res.status(404).json({error: `Invalid ID`})
+        res.status(404).json({ error: `Invalid ID` })
       }
     })
     .catch(next)

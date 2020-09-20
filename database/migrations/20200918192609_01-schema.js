@@ -18,19 +18,19 @@ exports.up = function (knex) {
     })
         .createTable('comments', comments => {
             comments.increments()
-
+            comments.integer('user_id')
+            .unsigned()
+            .notNullable()
+            .references('users.id')
+            .onDelete('RESTRICT')
+            .onUpdate('CASCADE')
             comments.text('comment')
                 .notNullable()
             //better name is negativityScore
             comments.integer('negativity')
                 .notNullable()
                 .unsigned()
-            comments.integer('user_id')
-                .unsigned()
-                .notNullable()
-                .references('users.id')
-                .onDelete('RESTRICT')
-                .onUpdate('CASCADE')
+            
         }
         )
 }
