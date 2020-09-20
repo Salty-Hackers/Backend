@@ -29,7 +29,7 @@ router.get('/comments', restricted, (req, res, next) => {
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
-  Users.userComments()
+  Users.usersComments()
     .then(users => {
 
       // console.log(`inside findBy`)

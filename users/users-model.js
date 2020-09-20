@@ -5,9 +5,12 @@ module.exports = {
   find,
   findBy,
   findById,
-  userComments,
+  usersComments,
 }
-function userComments() {
+
+
+
+function usersComments() {
   return db("users as u")
     .select("u.id", 'c.negativity as negativityScore', 'c.comment')
     .join('comments as c', 'u.id', 'c.user_id')
