@@ -7,8 +7,14 @@ module.exports = {
   findById,
   findUsersComments,
   deleteUser,
-  findAUserCommentsById
-
+  findAUserCommentsById,
+  updateUser,
+}
+async function updateUser (id, newUserData) {
+  await db("users")
+  .where({id})
+  .update(newUserData)
+  return findById(id) 
 }
 function findAUserCommentsById(id) {
   return db("users as u")

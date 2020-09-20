@@ -43,7 +43,7 @@ router.get('/comments', restricted, (req, res, next) => {
     })
     .catch(next)
 })
-router.get('/:id/comments', restricted, (req, res, next) => {
+router.get('/:id/comments', restricted, validateId, (req, res, next) => {
   // console.log('users get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)

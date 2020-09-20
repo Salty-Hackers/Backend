@@ -18,7 +18,9 @@ async function updateComment (id, newCommentData) {
 
 
 function find() {
-    return db("comments").select('*').orderBy("id")
+    return db("comments")
+        .select('*')
+        .orderBy("id")
 }
 
 function findBy(filter) {
