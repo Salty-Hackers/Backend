@@ -10,7 +10,7 @@ module.exports = {
 }
 
 async function updateComment (id, newCommentData) {
-    db("comments")
+    await db("comments")
     .where({id})
     .update(newCommentData)
     return findById(id) 

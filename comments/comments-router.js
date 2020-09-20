@@ -66,7 +66,7 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
-  Comments.deleteUser(req.params.id)
+  Comments.deleteComment(req.params.id)
     .then((deleteComment) => {
 
       // console.log(`inside findBy`)
@@ -81,10 +81,11 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
 })
 
 router.put("/:id", restricted, validateData, validateId, (req, res, next) => {
-  Comments.updateComment
+  Comments.updateComment(req.params.id, req.body)
     .then(updateComment => {
         res.status(200).json({updateComment})
     })
+    .catch(next)
 })
 
 // local middleware
@@ -95,7 +96,7 @@ function validateData(req, res, next) {
   next()
 }
 function validateId(req, res, next) {
-  Comments.deleteUser(req.params.id)
+  Comments.findById(req.params.id)
     .then((comment) => {
       if (comment) {
         next()
