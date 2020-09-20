@@ -6,13 +6,13 @@ module.exports = {
     findBy,
     findById,
     deleteComment,
-    updateUser,
+    updateComment,
 }
 
-function updateUser (id, newUserData) {
+function updateComment (id, newCommentData) {
     return db("comments")
     .where({id})
-    .update(newUserData)
+    .update(newCommentData)
     
 }
 
@@ -22,7 +22,7 @@ function find() {
 }
 
 function findBy(filter) {
-    // console.log(`-- user model inside findBy --`)
+    // console.log(`-- comment model inside findBy --`)
     // console.log(filter)
 
     return db("comments")
@@ -31,9 +31,9 @@ function findBy(filter) {
 }
 
 
-async function add(user) {
+async function add(comment) {
     try {
-        const [id] = await db("comments").insert(user, "id")
+        const [id] = await db("comments").insert(comment, "id")
 
         return findById(id)
     } catch (error) {
@@ -50,7 +50,7 @@ function findById(id) {
 async function deleteComment(id) {
     try {
         const deleteComment = await findById(id)
-        await db("users")
+        await db("comments")
             .where({ id })
             .del()
         return deleteComment
