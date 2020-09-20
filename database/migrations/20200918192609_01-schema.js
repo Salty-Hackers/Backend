@@ -25,11 +25,13 @@ exports.up = function (knex) {
                 .index()
             comments.text('negativity')
                 .notNullable()
-                .unique()
-            comments.foreign('user_id')
+                .index()
+            comments.integer('user_id')
+                .unsigned()
+                .notNullable()
                 .references('users.id')
-                .unique()
-
+                .onDelete('RESTRICT')
+                .onUpdate('CASCADE')
         }
         )
 }
