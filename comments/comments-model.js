@@ -49,11 +49,11 @@ function findById(id) {
 
 async function deleteComment(id) {
     try {
-        const deleteComment = await findById(id)
+        const deletedComment = await findById(id)
         await db("comments")
             .where({ id })
             .del()
-        return deleteComment
+        return deletedComment
     } catch (error) {
         throw error
   

@@ -73,7 +73,6 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
       // console.log(deleteComment)
 
       //take away the returning password
-      deletedUser.password = ``
       res.status(200).json({deleteComment} )
 
     })
@@ -99,6 +98,7 @@ function validateId(req, res, next) {
   Comments.findById(req.params.id)
     .then((comment) => {
       if (comment) {
+        req.comment = comment
         next()
       } else {
         res.status(404).json({ error: `Invalid ID` })
