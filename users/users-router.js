@@ -8,7 +8,27 @@ router.get("/", restricted, (req, res, next) => {
   // console.log('users get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
-  
+
+  Users.find()
+    .then(users => {
+
+      // console.log(`inside findBy`)
+      // console.log(users)
+
+      if (users.length) {
+        res.status(200).json(users)
+      } else {
+        res.status(404).json({ message: 'no users at the moment' })
+      }
+    })
+    .catch(next)
+})
+
+router.get('/comments', restricted, (req, res) => {
+  // console.log('users get /')
+  // console.log(req.jwt)
+  // console.log(req.jwt.department)
+
   const department = { department: req.jwt.department }
   Users.find(department)
     .then(users => {
@@ -19,14 +39,10 @@ router.get("/", restricted, (req, res, next) => {
       if (users.length) {
         res.status(200).json(users)
       } else {
-        res.status(404).json({message: 'no users at the moment'})
+        res.status(404).json({ message: 'no users at the moment' })
       }
     })
     .catch(next)
-})
-
-router.get('/comments', restricted, (req, res) => {
-
 })
 
 
