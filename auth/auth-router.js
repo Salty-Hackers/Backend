@@ -35,16 +35,16 @@ router.post('/login', (req, res) => {
   // implement login
   const { email, password } = req.body
   
-  console.log(`***users post /login***`)
-  console.log(email)
-  console.log(password)
+  // console.log(`***users post /login***`)
+  // console.log(email)
+  // console.log(password)
 
   if (isValid(req.body)) {
     Users.findBy({ email })
       .then(([user]) => {
 
-        console.log(`--inside findBy .then--`)
-        console.log(user)
+        // console.log(`--inside findBy .then--`)
+        // console.log(user)
 
         // compare the password the hash stored in the database
         if (user && bcryptjs.compareSync(password, user.password)) {
