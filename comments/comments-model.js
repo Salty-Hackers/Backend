@@ -9,11 +9,11 @@ module.exports = {
     updateComment,
 }
 
-function updateComment (id, newCommentData) {
-    return db("comments")
+async function updateComment (id, newCommentData) {
+    db("comments")
     .where({id})
     .update(newCommentData)
-    
+    return findById(id) 
 }
 
 
