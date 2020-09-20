@@ -79,9 +79,9 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
       // console.log(`inside deleteUser`)
       // console.log(DeleteUser)
 
-      //todo: take away the returning password
+      //take away the returning password
       deletedUser.password = ``
-      res.status(200).json({message: `user delete successfully`, deletedUser: deletedUser} )
+      res.status(200).json({message: `User successfully delete.`, deletedUser: deletedUser} )
 
     })
     .catch(next)

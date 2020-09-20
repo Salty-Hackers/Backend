@@ -67,17 +67,15 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
   // console.log(req.jwt.department)
 
   Users.deleteUser(req.params.id)
-    .then((comment) => {
+    .then((deleteComment) => {
 
       // console.log(`inside findBy`)
       // console.log(users)
 
-      if (comment) {
-        //todo: take away the returning password
-        res.status(200).json(comment)
-      } else {
-        res.status(404).json({ message: 'Invalid comment id' })
-      }
+      //take away the returning password
+      deletedUser.password = ``
+      res.status(200).json({message: `Comment successfully delete.`, deleteComment: deleteComment} )
+
     })
     .catch(next)
 })
@@ -87,21 +85,21 @@ router.put("/:id", restricted, validateId, (req, res, next) => {
 })
 
 // local middleware
-  function validateData(req, res, next) {
-    if (!req.body.comment && !req.body.negativity && !req.body.user_id) {
-      res.status(404).json({ error: `comment, negativity, and user_id are require` })
-    }
-    next()
+function validateData(req, res, next) {
+  if (!req.body.comment && !req.body.negativity && !req.body.user_id) {
+    res.status(404).json({ error: `comment, negativity, and user_id are require` })
   }
+  next()
+}
 function validateId(req, res, next) {
-    Users.deleteUser(req.params.id)
-      .then((comment) => {
-        if (comment) {
-          next()
-        } else {
-          res.status(404).json({ error: `Invalid ID` })
-        }
-      })
-      .catch(next)
-  }
+  Users.deleteUser(req.params.id)
+    .then((comment) => {
+      if (comment) {
+        next()
+      } else {
+        res.status(404).json({ error: `Invalid ID` })
+      }
+    })
+    .catch(next)
+}
 module.exports = router
