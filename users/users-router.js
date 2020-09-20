@@ -43,6 +43,25 @@ router.get('/comments', restricted, (req, res, next) => {
     })
     .catch(next)
 })
+router.post('/:id', restricted, (req, res, next) => {
+  // console.log('users get /')
+  // console.log(req.jwt)
+  // console.log(req.jwt.department)
+
+  Users.findById(req.params.id)
+    .then((users) => {
+
+      console.log(`inside findBy`)
+      console.log(users)
+
+      if (users) {
+        res.status(200).json(users)
+      } else {
+        res.status(404).json({ message: 'no user at the moment' })
+      }
+    })
+    .catch(next)
+})
 
 
 module.exports = router
