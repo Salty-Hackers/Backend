@@ -20,10 +20,10 @@ exports.up = function (knex) {
         .createTable('comments', comments => {
             comments.increments()
 
-            users.text('comment')
+            comments.text('comment')
                 .notNullable()
                 .index()
-            users.text('negativity')
+            comments.text('negativity')
                 .notNullable()
                 .unique()
             comments.foreign('user_id')
