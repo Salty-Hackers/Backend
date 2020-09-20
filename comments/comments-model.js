@@ -5,6 +5,7 @@ module.exports = {
     find,
     findBy,
     findById,
+    deleteComment,
 }
 
 
@@ -39,3 +40,14 @@ function findById(id) {
         .where({ id })
         .first()
 }
+
+async function deleteComment(id) {
+    try {
+        await db("comments")
+            .where({ id })
+            .del()
+        return findById(id)
+    } catch (error) {
+        throw error
+  
+    }}
