@@ -6,15 +6,15 @@ module.exports = {
   findBy,
   findById,
   findUsersComments,
-  findUserComments,
+  findAUserComments,
 }
 
-function findUserComments (id) {
+function findAUserComments (id) {
   return db("users as u")
     .select("u.id", 'c.negativity as negativityScore', 'c.comment')
     .join('comments as c', 'u.id', 'c.user_id')
     .orderBy("u.id")
-    .where({ id })
+    .where({ 'u.id' :id })
 }
 
 function findUsersComments() {

@@ -48,7 +48,7 @@ router.post('/:id', restricted, (req, res, next) => {
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
-  Users.findUserComments(req.params.id)
+  Users.findAUserComments(req.params.id)
     .then((users) => {
 
       console.log(`inside findBy`)
