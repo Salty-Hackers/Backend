@@ -69,7 +69,7 @@ router.get('/:id', restricted, validateId, (req, res, next) => {
 
 
 })
-router.post("/", restricted, validateData, (req, res, next) => {
+router.post("/", restricted, validateEntryData, (req, res, next) => {
 
   // console.log('users get /')
   // console.log(req.jwt)
@@ -108,10 +108,22 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
     })
     .catch(next)
 })
-router.put("/:id", restricted, validateId, (req, res, next) => {
-
+router.put("/:id", restricted, validateUpdateData, validateId, (req, res, next) => {
+  Users.updateUser(req.params.id, req.body)
+    .then(updatedUser => {
+      updatedUser.password = ``
+        res.status(200).json({updatedUser})
+    })
+    .catch(next)
 })
-function validateData(req, res, next) {
+
+function validateUpdateData (req, res, next) {
+  if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
+    res.status(404).json({ error: `first_name, last_name, email, and password are require` })
+  }
+  next()
+}
+function validateEntryData(req, res, next) {
 
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
     res.status(404).json({ error: `first_name, last_name, email, and password are require` })
