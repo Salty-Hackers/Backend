@@ -44,7 +44,7 @@ router.get('/:id', restricted, validateId, (req, res, next) => {
     })
     .catch(next)
 })
-
+// todo: get comments by user_id
 router.post('/', restricted, validateData, (req, res, next) => {
   Comments.add(req.body)
     .then((addedComment) => {

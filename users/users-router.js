@@ -43,6 +43,25 @@ router.get('/comments', restricted, (req, res, next) => {
     })
     .catch(next)
 })
+router.get('/:id/comments', restricted, (req, res, next) => {
+  // console.log('users get /')
+  // console.log(req.jwt)
+  // console.log(req.jwt.department)
+
+  Users.findAUserCommentsById(req.params.id)
+    .then(users => {
+
+      // console.log(`inside findBy`)
+      // console.log(users)
+
+      if (users.length) {
+        res.status(200).json(users)
+      } else {
+        res.status(404).json({ message: 'User has no comment' })
+      }
+    })
+    .catch(next)
+})
 router.get('/:id', restricted, validateId, (req, res, next) => {
   // console.log('users get /')
 
@@ -89,7 +108,9 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
     })
     .catch(next)
 })
+router.put("/:id", restricted, validateId, (req, res, next) => {
 
+})
 function validateData(req, res, next) {
 
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
