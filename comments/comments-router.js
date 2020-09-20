@@ -60,8 +60,8 @@ router.post('/', validateData, (req, res, next) => {
 })
 
 function validateData (req, res, next) {
-    if (!req.body.comment && !req.body.negativityScore && !req.body.user_id) {
-        res.status(404).json({error: `comment, negative score, and the id of the user who made the comment`})
+    if (!req.body.comment && !req.body.negativity && !req.body.user_id) {
+        res.status(404).json({error: `comment, negativity, and user_id are require`})
     }
     next()
 }
