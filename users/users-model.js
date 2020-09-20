@@ -21,11 +21,15 @@ function findAUserComments (id) {
 async function deleteUser(id) {
   // add extra functionality that when a user is delete all of there comments are also delete
   try {
-      const deleteUser = await findById(id)
+      const deleteUserAndComments = await findById(id)
       await db("users")
           .where({ id })
           .del()
-      return deleteUser
+      await db("comments")
+          .where({ user_id: id })
+          .del()
+      
+      return deleteUserAndComments
   } catch (error) {
       throw error
 
