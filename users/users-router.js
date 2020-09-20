@@ -83,7 +83,7 @@ router.post("/", restricted, validateData, (req, res, next) => {
 async function validateData(req, res, next) {
 
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
-    res.status(404).json({ error: `first_name, last_name, email, and password are require` })
+    res.status(404).json({ error: `first_name, last_name, email, and password are require` }) 
   }
 
   const email = {
