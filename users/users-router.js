@@ -45,22 +45,10 @@ router.get('/comments', restricted, (req, res, next) => {
 })
 router.get('/:id', restricted, validateId, (req, res, next) => {
   // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
+  
+  res.status(200).json(req.user)
 
-  Users.findAUserComments(req.params.id)
-    .then((users) => {
 
-      console.log(`inside findBy`)
-      console.log(users)
-
-      if (users) {
-        res.status(200).json(users)
-      } else {
-        res.status(404).json({ message: 'no user comments found' })
-      }
-    })
-    .catch(next)
 })
 router.post("/", restricted, validateData, (req, res, next) => {
 
@@ -104,7 +92,7 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
 function validateData(req, res, next) {
 
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
-    res.status(404).json({ error: `first_name, last_name, email, and password are require` }) 
+    res.status(404).json({ error: `first_name, last_name, email, and password are require` })
   }
 
   const email = {
@@ -113,7 +101,7 @@ function validateData(req, res, next) {
   Users.findBy(email)
     .then(([user]) => {
       if (user) {
-        res.status(404).json({error: `Email not unique`})
+        res.status(404).json({ error: `Email not unique` })
       } else {
         next()
       }
@@ -123,13 +111,15 @@ function validateData(req, res, next) {
 
 }
 
-function validateId (req, res, next) {
-  Users.deleteUser(req.params.id)
+function validateId(req, res, next) {
+  Users.findById(req.params.id)
     .then((user) => {
       if (user) {
+        //get users store and pass it down to the other router so they don't have to make a 2 call
+        req.user = user
         next()
       } else {
-        res.status(404).json({error: `Invalid ID`})
+        res.status(404).json({ error: `Invalid ID` })
       }
     })
     .catch(next)
