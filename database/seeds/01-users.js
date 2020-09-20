@@ -2,7 +2,6 @@ const faker = require('faker')
 faker.seed(4321)
 const bcryptjs = require("bcryptjs")
 
-// todo: add process.env.BCRYPT_ROUNDS || 8
 
 
 exports.seed = function (knex) {
@@ -13,61 +12,61 @@ exports.seed = function (knex) {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
         {
           first_name: faker.name.firstName(),
           last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          password: bcryptjs.hashSync(faker.internet.password(), 8),
+          password: bcryptjs.hashSync(`testpassword`, 8),
         },
       ]
     return knex("users")
