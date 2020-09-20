@@ -14,6 +14,7 @@ router.post('/register', (req, res) => {
     // hash the password
     const hash = bcryptjs.hashSync(credentials.password, rounds)
     credentials.password = hash
+
     // save the user to the database
     Users.add(credentials)
       .then(user => {
@@ -32,18 +33,19 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
   // implement login
-  const { username, password } = req.body
+  const { email, password } = req.body
   
-  // console.log(`***users post /login***`)
-  // console.log(username)
-  // console.log(password)
+  console.log(`***users post /login***`)
+  console.log(email)
+  console.log(password)
 
   if (isValid(req.body)) {
-    Users.findBy({ username: username })
+    Users.findBy({ email })
       .then(([user]) => {
 
-        // console.log(`--inside findBy .then--`)
-        // console.log(user)
+        console.log(`--inside findBy .then--`)
+        console.log(user)
+
         // compare the password the hash stored in the database
         if (user && bcryptjs.compareSync(password, user.password)) {
           const token = makeJwt(user)
@@ -57,7 +59,7 @@ router.post('/login', (req, res) => {
       })
   } else {
     res.status(404).json({
-      message: "please provide username and password and the password shoud be alphanumeric",
+      message: "please provide email and password and the password shoud be alphanumeric",
     })
   }
 })
