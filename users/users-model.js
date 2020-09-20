@@ -6,18 +6,10 @@ module.exports = {
   findBy,
   findById,
   findUsersComments,
-  findAUserComments,
   deleteUser,
 
 }
 
-function findAUserComments (id) {
-  return db("users as u")
-    .select("u.id", 'c.negativity as negativityScore', 'c.comment')
-    .join('comments as c', 'u.id', 'c.user_id')
-    .orderBy("u.id")
-    .where({ 'u.id' :id })
-}
 async function deleteUser(id) {
   // add extra functionality that when a user is delete all of there comments are also delete
   try {
