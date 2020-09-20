@@ -3,7 +3,7 @@ const router = require("express").Router()
 const Users = require("./users-model.js")
 const restricted = require("../auth/authenticate-middleware")
 
-router.get("/", restricted, (req, res) => {
+router.get("/", restricted, (req, res, next) => {
 
   // console.log('users get /')
   // console.log(req.jwt)
@@ -22,7 +22,7 @@ router.get("/", restricted, (req, res) => {
         res.status(404).json({message: 'no users at the moment'})
       }
     })
-    .catch(err => res.status(500).json(err.message))
+    .catch(next)
 })
 
 router.get('/comments', restricted, (req, res) => {
