@@ -5,7 +5,6 @@ const helmet = require('helmet');
 const authenticate = require('../auth/authenticate-middleware.js');
 const authRouter = require('../auth/auth-router.js');
 const userRouter = require(`../users/users-router`)
-const jokesRouter = require('../jokes/jokes-router.js');
 
 const server = express();
 
@@ -23,6 +22,5 @@ server.use((err, req, res, next) => {
 
 server.use('/api/auth', authRouter);
 server.use('/api/users', authenticate, userRouter);
-server.use('/api/jokes', authenticate, jokesRouter);
 
 module.exports = server;
