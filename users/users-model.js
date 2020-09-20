@@ -7,12 +7,12 @@ module.exports = {
   findById,
   userComments,
 }
-function userComments () {
+function userComments() {
   return db("users as u")
-  .select("u.id", "u.first_name as firstName", 'u.last_name as lastName', 'u.email', 'c.comment', 'c.negativity as negativityScore')
-  .join('comments as c', 'u.id', 'c.user_id') 
-  .orderBy("id")
-  
+    .select("u.id", 'c.negativity as negativityScore', 'c.comment')
+    .join('comments as c', 'u.id', 'c.user_id')
+    .orderBy("u.id")
+
 }
 function find() {
   return db("users").select("id", "first_name", 'last_name', 'email').orderBy("id")
@@ -21,10 +21,10 @@ function find() {
 function findBy(filter) {
   // console.log(`-- user model inside findBy --`)
   // console.log(filter)
-  
+
   return db("users")
-  .where(filter)
-  .orderBy("id")
+    .where(filter)
+    .orderBy("id")
 }
 
 

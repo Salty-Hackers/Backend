@@ -24,13 +24,12 @@ router.get("/", restricted, (req, res, next) => {
     .catch(next)
 })
 
-router.get('/comments', restricted, (req, res) => {
+router.get('/comments', restricted, (req, res, next) => {
   // console.log('users get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
 
-  const department = { department: req.jwt.department }
-  Users.find(department)
+  Users.userComments()
     .then(users => {
 
       // console.log(`inside findBy`)
