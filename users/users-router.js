@@ -57,7 +57,7 @@ router.post('/:id', restricted, (req, res, next) => {
       if (users) {
         res.status(200).json(users)
       } else {
-        res.status(404).json({ message: 'no user at the moment' })
+        res.status(404).json({ message: 'no user comments found' })
       }
     })
     .catch(next)
