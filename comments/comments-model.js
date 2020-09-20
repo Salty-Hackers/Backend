@@ -6,9 +6,15 @@ module.exports = {
     findBy,
     findById,
     deleteComment,
+    updateUser,
 }
 
-
+function updateUser (id, newUserData) {
+    return db("comments")
+    .where({id})
+    .update(newUserData)
+    
+}
 
 
 function find() {
@@ -43,10 +49,11 @@ function findById(id) {
 
 async function deleteComment(id) {
     try {
-        await db("comments")
+        const deleteComment = await findById(id)
+        await db("users")
             .where({ id })
             .del()
-        return findById(id)
+        return deleteComment
     } catch (error) {
         throw error
   
