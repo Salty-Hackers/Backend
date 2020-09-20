@@ -13,8 +13,8 @@ router.get("/", restricted, (req, res) => {
   Users.find(department)
     .then(users => {
 
-      console.log(`inside findBy`)
-      console.log(users)
+      // console.log(`inside findBy`)
+      // console.log(users)
 
       if (users.length) {
         res.status(200).json(users)
@@ -25,6 +25,9 @@ router.get("/", restricted, (req, res) => {
     .catch(err => res.status(500).json(err.message))
 })
 
+router.get('/comments', restricted, (req, res) => {
+
+})
 
 
 module.exports = router
