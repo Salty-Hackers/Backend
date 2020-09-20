@@ -20,10 +20,11 @@ function findAUserComments (id) {
 }
 async function deleteUser(id) {
   try {
+      const deleteUser = await findById(id)
       await db("users")
           .where({ id })
           .del()
-      return findById(id)
+      return deleteUser
   } catch (error) {
       throw error
 

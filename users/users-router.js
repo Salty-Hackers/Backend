@@ -45,7 +45,7 @@ router.get('/comments', restricted, (req, res, next) => {
 })
 router.get('/:id', restricted, validateId, (req, res, next) => {
   // console.log('users get /')
-  
+
   res.status(200).json(req.user)
 
 
@@ -74,17 +74,15 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
   // console.log(req.jwt.department)
 
   Users.deleteUser(req.params.id)
-    .then((users) => {
+    .then((deletedUser) => {
 
-      // console.log(`inside findBy`)
-      // console.log(users)
+      // console.log(`inside deleteUser`)
+      // console.log(DeleteUser)
 
-      if (users) {
-        //todo: take away the returning password
-        res.status(200).json(users)
-      } else {
-        res.status(404).json({ message: 'no user comments found' })
-      }
+      //todo: take away the returning password
+      deletedUser.password = ``
+      res.status(200).json({message: `user delete successfully`, deletedUser: deletedUser} )
+
     })
     .catch(next)
 })
