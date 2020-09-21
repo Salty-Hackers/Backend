@@ -10,7 +10,12 @@ const router = require('express').Router()
 router.post('/singup', async (req, res, next) => {
   try {
     //validate all require fields
-    if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
+    if (
+      !req.body.first_name &&
+      !req.body.last_name &&
+      !req.body.email &&
+      !req.body.password
+    ) {
       res.status(404).json({ error: `first_name, last_name, email, and password are require` })
     }
 
@@ -25,7 +30,7 @@ router.post('/singup', async (req, res, next) => {
 
     // implement registration
     const credentials = req.body
-    
+
     if (isValid(credentials)) {// check that I that the password is a string, and that the email exist
       const rounds = process.env.BCRYPT_ROUNDS || 8
       // hash the password
