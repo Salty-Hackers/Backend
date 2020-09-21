@@ -1,17 +1,24 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
+// libraries import
+const express = require('express')
+const cors = require('cors')
+const helmet = require('helmet')
 
-const authenticate = require('../auth/authenticate-middleware.js');
-const authRouter = require('../auth/auth-router.js');
+// file import
+const authenticate = require('../auth/authenticate-middleware.js')
+const authRouter = require('../auth/auth-router.js')
 const userRouter = require(`../users/users-router`)
 const commentsRouter = require(`../comments/comments-router`)
 
-const server = express();
+// start the server
+const server = express()
 
-server.use(helmet());
-server.use(cors());
-server.use(express.json());
+
+// third-party middleware
+server.use(helmet())
+server.use(cors())
+//built in middleware
+server.use(express.json())
+// error middleware
 server.use((err, req, res, next) => {
     console.log(err)
 
@@ -19,10 +26,14 @@ server.use((err, req, res, next) => {
         message: `Something went wrong, try again later`
     })
 }
-);
+)
 
-server.use('/api/auth', authRouter);
-server.use('/api/users', authenticate, userRouter);
-server.use('/api/comments', authenticate, commentsRouter);
+// custom middleware
+server.use('/api/auth', authRouter)
+server.use('/api/users', authenticate, userRouter)
+server.use('/api/comments', authenticate, commentsRouter)
+server.get('/', ( req, res, next) => {
+    res.status(200).json({Message: `Server is up. See documentation at https://documenter.getpostman.com/view/11996006/TVKBZeKE#8dc53815-0741-43ef-9d12-937fc5b94b50`})
+})
 
-module.exports = server;
+module.exports = server
