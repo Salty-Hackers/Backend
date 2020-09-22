@@ -9,11 +9,11 @@ module.exports = {
     updateComment,
 }
 
-async function updateComment (id, newCommentData) {
+async function updateComment(id, newCommentData) {
     await db("comments")
-    .where({id})
-    .update(newCommentData)
-    return findById(id) 
+        .where({ id })
+        .update(newCommentData)
+    return findById(id)
 }
 
 
@@ -58,5 +58,6 @@ async function deleteComment(id) {
         return deletedComment
     } catch (error) {
         throw error
-  
-    }}
+
+    }
+}
