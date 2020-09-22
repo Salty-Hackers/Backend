@@ -7,16 +7,16 @@ module.exports = {
   findById,
   findUsersComments,
   deleteUser,
-  findAUserCommentsById,
+  userCommentsById,
   updateUser,
 }
-async function updateUser (id, newUserData) {
+async function updateUser(id, newUserData) {
   await db("users")
-  .where({id})
-  .update(newUserData)
-  return findById(id) 
+    .where({ id })
+    .update(newUserData)
+  return findById(id)
 }
-function findAUserCommentsById(id) {
+function userCommentsById(id) {
   return db("users as u")
     .select('c.*')
     .join('comments as c', 'u.id', 'c.user_id')
@@ -24,7 +24,7 @@ function findAUserCommentsById(id) {
     .where({ 'u.id': id })
 }
 async function deleteUser(id) {
-  
+
   try {
     // const deleteUserAndComments = await findAUserCommentsById(id)
 
