@@ -44,7 +44,7 @@ async function deleteUser(id) {
 }
 function findUsersComments() {
   return db("users as u")
-    .select("u.id", 'c.negativity as negativityScore', 'c.comment')
+    .select("u.id", 'c.negativity_score as negativityScore', 'c.comment')
     .join('comments as c', 'u.id', 'c.user_id')
     .orderBy("u.id")
 
