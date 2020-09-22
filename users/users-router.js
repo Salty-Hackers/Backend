@@ -44,11 +44,6 @@ router.get('/comments', restricted, (req, res, next) => {
     .catch(next)
 })
 router.get('/:id/comments', restricted, validateUserId, async (req, res, next) => {
-  // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
-
-
   try {
     let userData = await Users.findById(req.params.id)
     const userComments = await Users.userCommentsById(req.params.id)
@@ -56,8 +51,6 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
       ...userData,
       userComments
     }
-    // console.log(user)
-    console.log(userComments)
     if (userComments.length) {
       res.status(200).json(userData)
     } else {
@@ -66,21 +59,6 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
   } catch (error) {
     next(error)
   }
-  // Users.userCommentsById(req.params.id)
-  //   .then(users => {
-
-  //     // console.log(`inside findBy`)
-  //     // console.log(users)
-
-  //     if (users.length) {
-  //       res.status(200).json(users)
-  //     } else {
-  //       res.status(404).json({ message: 'User has no comment' })
-  //     }
-  //   })
-  //   .catch(next)
-
-
 
 })
 router.get('/:id', restricted, validateUserId, (req, res, next) => {
