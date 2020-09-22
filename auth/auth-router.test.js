@@ -5,6 +5,11 @@ const db = require("../database/dbConfig")
 const { expectCt } = require("helmet")
 
 describe('authRouter', () => {
+    describe("environment", () => {
+        it('should set the DB_ENV variable to "testing"', () => {
+            expect(process.env.DB_ENV).toBe("testing")
+        })
+    })
     beforeAll(async () => {
         // trucate or empty the hobbits table
         // await db("users").truncate()
@@ -17,7 +22,7 @@ describe('authRouter', () => {
         const newUserValidData = {
             first_name: 'royer',
             last_name: 'adames',
-            email: 'royeraadames@gmail.com',
+            email: 'Narciso28@hotmail.com',
             password: 'admin',
         }
 
@@ -29,13 +34,15 @@ describe('authRouter', () => {
                 .send({
                     first_name: 'royer',
                     last_name: 'adames',
-                    email: 'royeraadames@gmail.com',
+                    email: 'Narciso28@hotmail.com',
                     password: 'admin',
                 })
                 .then(res => {
-                    expect(res.status).toBe(404)
-                    // expect(res.body.message).toMatch(/User sucessfully made./i)
                     console.log(res.body)
+                    expect(res.status).toBe(200)
+                    // expect(res.status).toBe(404)
+                    // expect(res.body.message).toMatch(/User sucessfully made./i)
+
                 })
         })
         it(`should respond 404 when password is not a string`, () => {
