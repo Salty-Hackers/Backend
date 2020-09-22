@@ -3,28 +3,22 @@ const supertest = require("supertest")
 const authRouter = require("../api/server")
 const db = require("../database/dbConfig")
 const { expectCt } = require("helmet")
+beforeAll(async () => {
+    // todo: verify that all the calls are being run has expected
+    // how to migrate, and run seed on js
+    await db.migrate.rollback()
+    await db.migrate.latest()
+    await db.seed.run()
 
+})
 describe('authRouter', () => {
     describe("environment", () => {
         it('should set the DB_ENV variable to "testing"', () => {
             expect(process.env.DB_ENV).toBe("testing")
         })
     })
-    beforeAll(async () => {
-        // trucate or empty the hobbits table
-        // await db("users").truncate()
-        // how to migrate, and run seed on js
-        // await db.migrate.rollback()
-        // .then(() => db.migrate.latest())
-        // .then(() => db.seed.run());
-    })
+
     describe(`post /singup`, () => {
-        const newUserValidData = {
-            first_name: 'royer',
-            last_name: 'adames',
-            email: 'Narciso28@hotmail.com',
-            password: 'admin',
-        }
 
         it(`should respond 200 when right amount of data is given`, () => {
             // expect(true).toBe(true)
@@ -34,12 +28,12 @@ describe('authRouter', () => {
                 .send({
                     first_name: 'royer',
                     last_name: 'adames',
-                    email: 'Narciso28@hotmail.com',
+                    email: 'testing2@hotmail.com',
                     password: 'admin',
                 })
                 .then(res => {
                     console.log(res.body)
-                    expect(res.status).toBe(200)
+                    expect(res.status).toBe(201)
                     // expect(res.status).toBe(404)
                     // expect(res.body.message).toMatch(/User sucessfully made./i)
 

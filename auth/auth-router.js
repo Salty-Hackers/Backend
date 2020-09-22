@@ -7,7 +7,8 @@ const Users = require("../users/users-model")
 const router = require('express').Router()
 
 // endpoints
-router.post('/singup', async (req, res, next) => {
+router.post('/signup', async (req, res, next) => {
+  console.log(`inside singup router`)
   try {
     //validate all require fields
     if (
@@ -47,6 +48,7 @@ router.post('/singup', async (req, res, next) => {
       })
     }
   } catch (error) {
+    console.log(error.message)
     next(error)
   }
 
