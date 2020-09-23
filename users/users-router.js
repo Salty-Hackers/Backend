@@ -106,6 +106,7 @@ router.post("/", restricted, validateEntryData, (req, res, next) => {
     })
     .catch(next)
 })
+
 router.delete("/:id", restricted, validateUserId, (req, res, next) => {
 
   // console.log('users get /')

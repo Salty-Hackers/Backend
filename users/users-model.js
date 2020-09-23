@@ -10,8 +10,10 @@ module.exports = {
   deleteUser,
   userCommentsById,
   updateUser,
+
 }
-function findUserFavoriteComments(id,) {
+
+function findUserFavoriteComments(id) {
   return db("users as u")
     .select('c.*')
     .join('comments as c', 'u.id', 'c.user_id')

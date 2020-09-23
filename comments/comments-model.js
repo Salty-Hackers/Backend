@@ -7,8 +7,14 @@ module.exports = {
     findById,
     deleteComment,
     updateComment,
+    setfavoriteComment,
 }
-
+function setfavoriteComment
+    (id, favorite) {
+    return db('comments')
+        .where('id', '=', id)
+        .update({ favorite })
+}
 async function updateComment(id, newCommentData) {
     await db("comments")
         .where({ id })

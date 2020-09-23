@@ -72,7 +72,7 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
       // console.log(deleteComment)
 
       //take away the returning password
-      res.status(200).json({deleteComment} )
+      res.status(200).json({ deleteComment })
 
     })
     .catch(next)
@@ -81,11 +81,29 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
 router.put("/:id", restricted, validateData, validateId, (req, res, next) => {
   Comments.updateComment(req.params.id, req.body)
     .then(updateComment => {
-        res.status(200).json({updateComment})
+      res.status(200).json({ updateComment })
     })
     .catch(next)
 })
 
+
+router.put('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
+  try {
+    if (!(typeof (req.body.favorite) === 'boolean')) {
+      res.status(404).json({ error: `favorite need to be true or false` })
+    }
+
+    const userFavoriteComments = await Users.setfavoriteComment(req.params.id, req.body.favorite)
+    if (userFavoriteComments.length) {
+      res.status(200).json({ message: ` ${favorite ? `Successfully made comment a favorite` : `Took comment away from favorites`}` })
+    } else {
+      res.status(404).json({ message: 'User has no favorite comments' })
+    }
+  } catch (error) {
+    next(error)
+  }
+
+})
 // local middleware
 function validateData(req, res, next) {
   if (!req.body.comment && !req.body.negativity && !req.body.user_id) {
