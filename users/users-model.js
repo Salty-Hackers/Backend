@@ -14,11 +14,12 @@ module.exports = {
 }
 
 function findUserFavoriteComments(id) {
-  return db("users as u")
+  return db("favorite_comments as fc")
     .select('c.*')
-    .join('comments as c', 'u.id', 'c.user_id')
-    .orderBy("u.id")
-    .where({ 'u.id': id, 'favorite': true })
+    .join('users as u', 'u.id', 'fc.user_id')
+    .join('comments as c', 'c.id', 'fc.comment_id')
+    .orderBy("c.id")
+    .where({ 'u.id': id })
 }
 async function updateUser(id, newUserData) {
   await db("users")
