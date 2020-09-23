@@ -13,7 +13,7 @@ module.exports = {
   addUserFavoriteComment,
   deleteUserFavoriteComment,
 }
-function deleteUserFavoriteComment(user_id, comment_id) {
+async function deleteUserFavoriteComment(user_id, comment_id) {
   try {
     const deletedComment = Comments.findById(comment_id)
     await db('favorite_comments')

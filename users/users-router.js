@@ -65,25 +65,7 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
   }
 
 })
-router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
-  try {
-    let userData = await Users.findById(req.params.id)
-    const userFavoriteComments = await Users.findUserFavoriteComments(req.params.id)
-    userData = {
-      ...userData,
-      userFavoriteComments
-    }
-    delete userData.password
-    if (userFavoriteComments.length) {
-      res.status(200).json(userData)
-    } else {
-      res.status(404).json({ message: 'User has no favorite comments' })
-    }
-  } catch (error) {
-    next(error)
-  }
 
-})
 router.get('/:id', restricted, validateUserId, (req, res, next) => {
   // console.log('users get /')
 
@@ -139,6 +121,60 @@ router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, ne
     })
     .catch(next)
 })
+
+// favorites comments
+router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
+  try {
+    let userData = await Users.findById(req.params.id)
+    const userFavoriteComments = await Users.findUserFavoriteComments(req.params.id)
+    userData = {
+      ...userData,
+      userFavoriteComments
+    }
+    delete userData.password
+    if (userFavoriteComments.length) {
+      res.status(200).json(userData)
+    } else {
+      res.status(404).json({ message: 'User has no favorite comments' })
+    }
+  } catch (error) {
+    next(error)
+  }
+
+})
+router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
+  try {
+
+
+
+    const addedUserFavoriteComment = await Users.addUserFavoriteComment(req.params.id, req.params.comment_id)
+
+    res.status(200).json({ message: `Successfully added comment to has a favorite `, addedUserFavoriteComment })
+  } catch (error) {
+    next(error)
+  }
+
+})
+router.delete('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
+  try {
+    let userData = await Users.findById(req.params.id)
+    const userFavoriteComments = await Users.findUserFavoriteComments(req.params.id)
+    userData = {
+      ...userData,
+      userFavoriteComments
+    }
+    delete userData.password
+    if (userFavoriteComments.length) {
+      res.status(200).json(userData)
+    } else {
+      res.status(404).json({ message: 'User has no favorite comments' })
+    }
+  } catch (error) {
+    next(error)
+  }
+
+})
+
 
 // local middleware
 function validateUpdateData(req, res, next) {
