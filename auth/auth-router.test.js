@@ -51,8 +51,17 @@ describe('authRouter', () => {
                 })
         })
         describe(`post /login`, () => {
-            it(``, () => {
-
+            it(`should return 200`, () => {
+                return supertest(server)
+                    .post(`/api/auth/signup`)
+                    .send({
+                        email: 'Alexis_Keebler23@hotmail.com',
+                        password: 'testpassword',
+                    })
+                    .then(res => {
+                        expect(res.status).toBe(200)
+                        // expect(res.body.message).toMatch(/please provide username and password and the password shoud be alphanumeric/i)
+                    })
             })
             //     it(``, () => {
 
