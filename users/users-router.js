@@ -1,8 +1,11 @@
+// libraries imports
 const router = require("express").Router()
 
+// file imports
 const Users = require("./users-model.js")
 const restricted = require("../auth/authenticate-middleware")
 
+// user endpooints
 router.get("/", restricted, (req, res, next) => {
 
   // console.log('users get /')
@@ -134,6 +137,7 @@ router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, ne
     .catch(next)
 })
 
+// local middleware
 function validateUpdateData(req, res, next) {
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
     res.status(404).json({ error: `first_name, last_name, email, and password are require` })
