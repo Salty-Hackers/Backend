@@ -1,5 +1,5 @@
 const db = require("../database/dbConfig")
-
+const Comments = require('../comments/comments-model')
 module.exports = {
   add,
   find,
@@ -10,15 +10,37 @@ module.exports = {
   deleteUser,
   userCommentsById,
   updateUser,
-
+  addUserFavoriteComment,
+  deleteUserFavoriteComment,
+}
+async function deleteUserFavoriteComment(user_id, comment_id) {
+  try {
+    const deletedComment = Comments.findById(comment_id)
+    await db('favorite_comments')
+      .where({ user_id, comment_id })
+      .del()
+    return deletedComment
+  } catch (error) {
+    return error
+  }
 }
 
+async function addUserFavoriteComment(user_id, comment_id) {
+  try {
+    await db('favorite_comments')
+      .insert({ user_id, comment_id })
+    return Comments.findById(comment_id)
+  } catch (error) {
+    return error
+  }
+}
 function findUserFavoriteComments(id) {
-  return db("users as u")
+  return db("favorite_comments as fc")
     .select('c.*')
-    .join('comments as c', 'u.id', 'c.user_id')
-    .orderBy("u.id")
-    .where({ 'u.id': id, 'favorite': true })
+    .join('users as u', 'u.id', 'fc.user_id')
+    .join('comments as c', 'c.id', 'fc.comment_id')
+    .orderBy("c.id")
+    .where({ 'u.id': id })
 }
 async function updateUser(id, newUserData) {
   await db("users")
@@ -49,7 +71,7 @@ async function deleteUser(id) {
 
     return deleteUserAndComments
   } catch (error) {
-    throw error
+    return error
 
   }
 }
