@@ -1,6 +1,6 @@
 
 exports.up = function (knex) {
-    return knex.schema.createTable('comments', comments => {
+    return knex.schema.createTable('favorite_comments', comments => {
         comments.increments()
 
         comments.integer('user_id')
