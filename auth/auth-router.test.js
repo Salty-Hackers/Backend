@@ -32,11 +32,8 @@ describe('authRouter', () => {
                     password: 'admin',
                 })
                 .then(res => {
-                    console.log(res.body)
                     expect(res.status).toBe(201)
-                    // expect(res.status).toBe(404)
-                    // expect(res.body.message).toMatch(/User sucessfully made./i)
-
+                    expect(res.body.message).toBe(`User sucessfully made.`)
                 })
         })
         //     it(`should respond 404 when password is not a string`, () => {
