@@ -1,8 +1,11 @@
+// libraries imports
 const router = require("express").Router()
 
+// file imports
 const Users = require("./users-model.js")
 const restricted = require("../auth/authenticate-middleware")
 
+// user endpooints
 router.get("/", restricted, (req, res, next) => {
 
   // console.log('users get /')
@@ -43,26 +46,43 @@ router.get('/comments', restricted, (req, res, next) => {
     })
     .catch(next)
 })
-router.get('/:id/comments', restricted, validateId, (req, res, next) => {
-  // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
+router.get('/:id/comments', restricted, validateUserId, async (req, res, next) => {
+  try {
+    let userData = await Users.findById(req.params.id)
+    const userComments = await Users.userCommentsById(req.params.id)
+    userData = {
+      ...userData,
+      userComments
+    }
+    if (userComments.length) {
+      res.status(200).json(userData)
+    } else {
+      res.status(404).json({ message: 'User has no comment' })
+    }
+  } catch (error) {
+    next(error)
+  }
 
-  Users.findAUserCommentsById(req.params.id)
-    .then(users => {
-
-      // console.log(`inside findBy`)
-      // console.log(users)
-
-      if (users.length) {
-        res.status(200).json(users)
-      } else {
-        res.status(404).json({ message: 'User has no comment' })
-      }
-    })
-    .catch(next)
 })
-router.get('/:id', restricted, validateId, (req, res, next) => {
+router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
+  try {
+    let userData = await Users.findById(req.params.id)
+    const userFavoriteComments = await Users.findUserFavoriteComments(req.params.id)
+    userData = {
+      ...userData,
+      userFavoriteComments
+    }
+    if (userFavoriteComments.length) {
+      res.status(200).json(userData)
+    } else {
+      res.status(404).json({ message: 'User has no favorite comments' })
+    }
+  } catch (error) {
+    next(error)
+  }
+
+})
+router.get('/:id', restricted, validateUserId, (req, res, next) => {
   // console.log('users get /')
 
   res.status(200).json(req.user)
@@ -86,7 +106,8 @@ router.post("/", restricted, validateEntryData, (req, res, next) => {
     })
     .catch(next)
 })
-router.delete("/:id", restricted, validateId, (req, res, next) => {
+
+router.delete("/:id", restricted, validateUserId, (req, res, next) => {
 
   // console.log('users get /')
   // console.log(req.jwt)
@@ -102,22 +123,23 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
       // console.log(DeleteUser)
 
       res.status(200).json({
-          message: `The user and their messages have been deleted.`
-        })
+        message: `The user and their messages have been deleted.`
+      })
 
     })
     .catch(next)
 })
-router.put("/:id", restricted, validateUpdateData, validateId, (req, res, next) => {
+router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, next) => {
   Users.updateUser(req.params.id, req.body)
     .then(updatedUser => {
       updatedUser.password = ``
-        res.status(200).json({updatedUser})
+      res.status(200).json({ updatedUser })
     })
     .catch(next)
 })
 
-function validateUpdateData (req, res, next) {
+// local middleware
+function validateUpdateData(req, res, next) {
   if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
     res.status(404).json({ error: `first_name, last_name, email, and password are require` })
   }
@@ -145,7 +167,7 @@ function validateEntryData(req, res, next) {
 
 }
 
-function validateId(req, res, next) {
+function validateUserId(req, res, next) {
   Users.findById(req.params.id)
     .then((user) => {
       if (user) {

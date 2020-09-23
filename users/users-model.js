@@ -5,18 +5,28 @@ module.exports = {
   find,
   findBy,
   findById,
+  findUserFavoriteComments,
   findUsersComments,
   deleteUser,
-  findAUserCommentsById,
+  userCommentsById,
   updateUser,
+
 }
-async function updateUser (id, newUserData) {
+
+function findUserFavoriteComments(id) {
+  return db("users as u")
+    .select('c.*')
+    .join('comments as c', 'u.id', 'c.user_id')
+    .orderBy("u.id")
+    .where({ 'u.id': id, 'favorite': true })
+}
+async function updateUser(id, newUserData) {
   await db("users")
-  .where({id})
-  .update(newUserData)
-  return findById(id) 
+    .where({ id })
+    .update(newUserData)
+  return findById(id)
 }
-function findAUserCommentsById(id) {
+function userCommentsById(id) {
   return db("users as u")
     .select('c.*')
     .join('comments as c', 'u.id', 'c.user_id')
@@ -24,7 +34,7 @@ function findAUserCommentsById(id) {
     .where({ 'u.id': id })
 }
 async function deleteUser(id) {
-  
+
   try {
     // const deleteUserAndComments = await findAUserCommentsById(id)
 
@@ -44,7 +54,7 @@ async function deleteUser(id) {
 }
 function findUsersComments() {
   return db("users as u")
-    .select("u.id", 'c.negativity as negativityScore', 'c.comment')
+    .select("u.id", 'c.negativity_score as negativityScore', 'c.comment')
     .join('comments as c', 'u.id', 'c.user_id')
     .orderBy("u.id")
 

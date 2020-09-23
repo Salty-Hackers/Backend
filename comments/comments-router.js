@@ -25,7 +25,7 @@ router.get("/", restricted, (req, res, next) => {
     .catch(next)
 })
 
-router.get('/:id', restricted, validateId, (req, res, next) => {
+router.get('/:id', restricted, validateCommentsId, (req, res, next) => {
   // console.log('Comments get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
@@ -59,7 +59,7 @@ router.post('/', restricted, validateData, (req, res, next) => {
     })
     .catch(next)
 })
-router.delete("/:id", restricted, validateId, (req, res, next) => {
+router.delete("/:id", restricted, validateCommentsId, (req, res, next) => {
 
   // console.log('Comments get /')
   // console.log(req.jwt)
@@ -72,20 +72,35 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
       // console.log(deleteComment)
 
       //take away the returning password
-      res.status(200).json({deleteComment} )
+      res.status(200).json({ deleteComment })
 
     })
     .catch(next)
 })
 
-router.put("/:id", restricted, validateData, validateId, (req, res, next) => {
+router.put("/:id", restricted, validateData, validateCommentsId, (req, res, next) => {
   Comments.updateComment(req.params.id, req.body)
     .then(updateComment => {
-        res.status(200).json({updateComment})
+      res.status(200).json({ updateComment })
     })
     .catch(next)
 })
 
+
+router.put('/:id/favoritecomments', restricted, validateCommentsId, async (req, res, next) => {
+  try {
+    if (!(typeof (req.body.favorite) === 'boolean')) {
+      res.status(404).json({ error: `favorite need to be true or false` })
+    }
+
+    await Comments.setfavoriteComment(req.params.id, req.body.favorite)
+    res.status(200).json({ message: ` ${req.body.favorite ? `Successfully made comment a favorite` : `Comment is not a favorite`}` })
+
+  } catch (error) {
+    next(error)
+  }
+
+})
 // local middleware
 function validateData(req, res, next) {
   if (!req.body.comment && !req.body.negativity && !req.body.user_id) {
@@ -93,7 +108,7 @@ function validateData(req, res, next) {
   }
   next()
 }
-function validateId(req, res, next) {
+function validateCommentsId(req, res, next) {
   Comments.findById(req.params.id)
     .then((comment) => {
       if (comment) {

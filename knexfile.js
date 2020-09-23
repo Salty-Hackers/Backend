@@ -1,4 +1,4 @@
-const pgConnection = process.env.DATABASE_URL || "postgresql://postgres@localhost/hobbits";
+const pgConnection = process.env.databaseBASE_URL || "postgresql://postgres@localhost/hobbits";
 
 
 module.exports = {
@@ -11,18 +11,23 @@ module.exports = {
       tableName: 'dbmigrations',
     },
     seeds: { directory: './database/seeds' },
+    pool: {
+      afterCreate: (conn, done) => {
+        conn.run("PRAGMA foreign_keys = ON", done)
+      }
+    }
   },
   testing: {
     client: "sqlite3",
     connection: {
-      filename: "./data/testing.db3",
+      filename: "./database/testing.db3",
     },
     useNullAsDefault: true,
     migrations: {
-      directory: "./data/migrations",
+      directory: "./database/migrations",
     },
     seeds: {
-      directory: "./data/seeds",
+      directory: "./database/seeds",
     },
   },
 
@@ -34,10 +39,10 @@ module.exports = {
       max: 10,
     },
     migrations: {
-      directory: "./data/migrations",
+      directory: "./database/migrations",
     },
     seeds: {
-      directory: "./data/seeds",
+      directory: "./database/seeds",
     },
   },
 };

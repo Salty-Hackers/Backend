@@ -7,13 +7,20 @@ module.exports = {
     findById,
     deleteComment,
     updateComment,
+    setfavoriteComment,
 }
-
-async function updateComment (id, newCommentData) {
+function setfavoriteComment
+    (id, favorite) {
+    console.log(favorite)
+    return db('comments')
+        .where('id', '=', id)
+        .update({ favorite })
+}
+async function updateComment(id, newCommentData) {
     await db("comments")
-    .where({id})
-    .update(newCommentData)
-    return findById(id) 
+        .where({ id })
+        .update(newCommentData)
+    return findById(id)
 }
 
 
@@ -58,5 +65,6 @@ async function deleteComment(id) {
         return deletedComment
     } catch (error) {
         throw error
-  
-    }}
+
+    }
+}

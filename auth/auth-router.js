@@ -7,7 +7,8 @@ const Users = require("../users/users-model")
 const router = require('express').Router()
 
 // endpoints
-router.post('/singup', async (req, res, next) => {
+router.post('/signup', async (req, res, next) => {
+  console.log(`inside singup router`)
   try {
     //validate all require fields
     if (
@@ -47,6 +48,7 @@ router.post('/singup', async (req, res, next) => {
       })
     }
   } catch (error) {
+    console.log(error.message)
     next(error)
   }
 
@@ -70,12 +72,14 @@ router.post('/login', (req, res) => {
         // compare the password the hash stored in the database
         if (user && bcryptjs.compareSync(password, user.password)) {
           const token = makeJwt(user)
-          res.status(200).json({ user:{
-            id: user.id,
-            firstName: user.first_name,
-            lastName: user.last_name,
-            email: user.email,
-          }, token })
+          res.status(200).json({
+            user: {
+              id: user.id,
+              firstName: user.first_name,
+              lastName: user.last_name,
+              email: user.email,
+            }, token
+          })
         } else {
           res.status(404).json({ message: "Invalid credentials" })
         }

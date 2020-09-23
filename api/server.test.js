@@ -101,11 +101,11 @@ describe("server", () => {
         it(`should return 200`, () => {
             console.log(currentToken)
             return supertest(server)
-            .get(`/api/jokes`)
-            .set('authorization', currentToken) 
-            .then( (res) => {
-                expect(res.status).toBe(200)
-            })
+                .get(`/api/jokes`)
+                .set('authorization', currentToken)
+                .then((res) => {
+                    expect(res.status).toBe(200)
+                })
         })
         // it(`should return respond with jokes`, () => {
         //     return supertest(server)
