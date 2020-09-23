@@ -11,6 +11,7 @@ module.exports = {
 }
 function setfavoriteComment
     (id, favorite) {
+    console.log(favorite)
     return db('comments')
         .where('id', '=', id)
         .update({ favorite })

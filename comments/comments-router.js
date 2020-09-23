@@ -25,7 +25,7 @@ router.get("/", restricted, (req, res, next) => {
     .catch(next)
 })
 
-router.get('/:id', restricted, validateId, (req, res, next) => {
+router.get('/:id', restricted, validateCommentsId, (req, res, next) => {
   // console.log('Comments get /')
   // console.log(req.jwt)
   // console.log(req.jwt.department)
@@ -59,7 +59,7 @@ router.post('/', restricted, validateData, (req, res, next) => {
     })
     .catch(next)
 })
-router.delete("/:id", restricted, validateId, (req, res, next) => {
+router.delete("/:id", restricted, validateCommentsId, (req, res, next) => {
 
   // console.log('Comments get /')
   // console.log(req.jwt)
@@ -78,7 +78,7 @@ router.delete("/:id", restricted, validateId, (req, res, next) => {
     .catch(next)
 })
 
-router.put("/:id", restricted, validateData, validateId, (req, res, next) => {
+router.put("/:id", restricted, validateData, validateCommentsId, (req, res, next) => {
   Comments.updateComment(req.params.id, req.body)
     .then(updateComment => {
       res.status(200).json({ updateComment })
@@ -87,18 +87,15 @@ router.put("/:id", restricted, validateData, validateId, (req, res, next) => {
 })
 
 
-router.put('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
+router.put('/:id/favoritecomments', restricted, validateCommentsId, async (req, res, next) => {
   try {
     if (!(typeof (req.body.favorite) === 'boolean')) {
       res.status(404).json({ error: `favorite need to be true or false` })
     }
 
-    const userFavoriteComments = await Users.setfavoriteComment(req.params.id, req.body.favorite)
-    if (userFavoriteComments.length) {
-      res.status(200).json({ message: ` ${favorite ? `Successfully made comment a favorite` : `Took comment away from favorites`}` })
-    } else {
-      res.status(404).json({ message: 'User has no favorite comments' })
-    }
+    await Comments.setfavoriteComment(req.params.id, req.body.favorite)
+    res.status(200).json({ message: ` ${req.body.favorite ? `Successfully made comment a favorite` : `Comment is not a favorite`}` })
+
   } catch (error) {
     next(error)
   }
@@ -111,7 +108,7 @@ function validateData(req, res, next) {
   }
   next()
 }
-function validateId(req, res, next) {
+function validateCommentsId(req, res, next) {
   Comments.findById(req.params.id)
     .then((comment) => {
       if (comment) {
