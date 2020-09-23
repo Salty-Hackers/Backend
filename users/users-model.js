@@ -1,5 +1,5 @@
 const db = require("../database/dbConfig")
-
+const Comments = require('../comments/comments-model')
 module.exports = {
   add,
   find,
@@ -10,9 +10,17 @@ module.exports = {
   deleteUser,
   userCommentsById,
   updateUser,
-
+  addUserFavoriteComments
 }
-
+async function addUserFavoriteComments(user_id, comment_id) {
+  try {
+    await db('favorite_comments')
+      .insert({ user_id, comment_id })
+    return Comments.findById(comment_id)
+  } catch (error) {
+    return error
+  }
+}
 function findUserFavoriteComments(id) {
   return db("favorite_comments as fc")
     .select('c.*')
@@ -50,7 +58,7 @@ async function deleteUser(id) {
 
     return deleteUserAndComments
   } catch (error) {
-    throw error
+    return error
 
   }
 }
