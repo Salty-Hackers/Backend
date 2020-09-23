@@ -8,19 +8,6 @@ exports.seed = function (knex) {
       comment: faker.hacker.phrase(),
       negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
       user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
-    },
-    {
-      comment: faker.hacker.phrase(),
-      negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
-    },
-    {
-      comment: faker.hacker.phrase(),
-      negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
     },
     {
       comment: faker.hacker.phrase(),
@@ -31,7 +18,6 @@ exports.seed = function (knex) {
       comment: faker.hacker.phrase(),
       negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
       user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
     },
     {
       comment: faker.hacker.phrase(),
@@ -42,7 +28,6 @@ exports.seed = function (knex) {
       comment: faker.hacker.phrase(),
       negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
       user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
     },
     {
       comment: faker.hacker.phrase(),
@@ -53,13 +38,6 @@ exports.seed = function (knex) {
       comment: faker.hacker.phrase(),
       negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
       user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
-    },
-    {
-      comment: faker.hacker.phrase(),
-      negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
     },
     {
       comment: faker.hacker.phrase(),
@@ -70,19 +48,31 @@ exports.seed = function (knex) {
       comment: faker.hacker.phrase(),
       negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
       user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
     },
     {
       comment: faker.hacker.phrase(),
       negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
       user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
     },
     {
       comment: faker.hacker.phrase(),
       negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
       user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      favorite: true,
+    },
+    {
+      comment: faker.hacker.phrase(),
+      negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
+      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
+    },
+    {
+      comment: faker.hacker.phrase(),
+      negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
+      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
+    },
+    {
+      comment: faker.hacker.phrase(),
+      negativity_score: faker.random.number({ max: 20000, min: 5000, precision: 1 }),
+      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
     },
     {
       comment: faker.hacker.phrase(),
