@@ -5,10 +5,18 @@ module.exports = {
   find,
   findBy,
   findById,
+  findUserFavoriteComments,
   findUsersComments,
   deleteUser,
   userCommentsById,
   updateUser,
+}
+function findUserFavoriteComments(id,) {
+  return db("users as u")
+    .select('c.*')
+    .join('comments as c', 'u.id', 'c.user_id')
+    .orderBy("u.id")
+    .where({ 'u.id': id, 'favorite': true })
 }
 async function updateUser(id, newUserData) {
   await db("users")
