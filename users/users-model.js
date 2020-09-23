@@ -39,12 +39,13 @@ async function deleteUser(id) {
     // const deleteUserAndComments = await findAUserCommentsById(id)
 
     // delete the user and their comments
-    const deleteUserAndComments = await db("users")
-      .where({ id })
-      .del()
     await db("comments")
       .where({ user_id: id })
       .del()
+    const deleteUserAndComments = await db("users")
+      .where({ id })
+      .del()
+
 
     return deleteUserAndComments
   } catch (error) {

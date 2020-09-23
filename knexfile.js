@@ -4,13 +4,17 @@ const pgConnection = process.env.databaseBASE_URL || "postgresql://postgres@loca
 module.exports = {
   development: {
     client: 'sqlite3',
-    connection: { filename: './database/auth.db3' },
+    connection: {
+      filename: './database/auth.db3'
+    },
     useNullAsDefault: true,
     migrations: {
       directory: './database/migrations',
-      tableName: 'dbmigrations',
+      // tableName: 'dbmigrations',
     },
-    seeds: { directory: './database/seeds' },
+    seeds: {
+      directory: './database/seeds'
+    },
     pool: {
       afterCreate: (conn, done) => {
         conn.run("PRAGMA foreign_keys = ON", done)
@@ -20,17 +24,21 @@ module.exports = {
   testing: {
     client: "sqlite3",
     connection: {
-      filename: "./database/testing.db3",
+      filename: "./database/auth-testing.db3",
     },
     useNullAsDefault: true,
     migrations: {
-      directory: "./database/migrations",
+      directory: './database/migrations',
     },
     seeds: {
       directory: "./database/seeds",
     },
+    pool: {
+      afterCreate: (conn, done) => {
+        conn.run("PRAGMA foreign_keys = ON", done)
+      }
+    },
   },
-
   production: {
     client: "pg",
     connection: pgConnection,
