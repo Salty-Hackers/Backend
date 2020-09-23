@@ -3,18 +3,18 @@ const supertest = require("supertest")
 const authRouter = require("../api/server")
 const db = require("../database/dbConfig")
 const { expectCt } = require("helmet")
-beforeAll(async () => {
-    // todo: verify that all the calls are being run has expected
-    // how to migrate, and run seed on js
-    await db.migrate.rollback()
-    await db.migrate.latest()
-    await db.seed.run()
 
-})
 describe('authRouter', () => {
+    beforeAll(async () => {
+        // how to migrate, and run seed on js
+        await db.migrate.rollback('all')
+        await db.migrate.latest()
+        await db.seed.run()
+
+    })
     describe("environment", () => {
         it('should set the DB_ENV variable to "testing"', () => {
-            expect(process.env.DB_ENV).toBe("testing")
+            expect(process.env.DB_ENV).toMatch(/testing/i)
         })
     })
 
@@ -39,34 +39,34 @@ describe('authRouter', () => {
 
                 })
         })
-        it(`should respond 404 when password is not a string`, () => {
+        //     it(`should respond 404 when password is not a string`, () => {
 
-        })
-        it(`should respond 404 when there is no password`, () => {
+        //     })
+        //     it(`should respond 404 when there is no password`, () => {
 
-        })
-        it(`should respond 404 when there is no email`, () => {
+        //     })
+        //     it(`should respond 404 when there is no email`, () => {
 
-        })
-        it(`should respond 404 when there is no first_name`, () => {
+        //     })
+        //     it(`should respond 404 when there is no first_name`, () => {
 
-        })
-        it(`should respond 404 when there is no last_name`, () => {
+        //     })
+        //     it(`should respond 404 when there is no last_name`, () => {
 
-        })
-    })
-    describe(`post /login`, () => {
-        it(``, () => {
+        //     })
+        // })
+        // describe(`post /login`, () => {
+        //     it(``, () => {
 
-        })
-        it(``, () => {
+        //     })
+        //     it(``, () => {
 
-        })
-        it(``, () => {
+        //     })
+        //     it(``, () => {
 
-        })
-        it(``, () => {
+        //     })
+        //     it(``, () => {
 
-        })
+        //     })
     })
 }) 
