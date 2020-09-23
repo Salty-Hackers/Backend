@@ -8,7 +8,7 @@ const router = require('express').Router()
 
 // endpoints
 router.post('/signup', async (req, res, next) => {
-  console.log(`inside singup router`)
+  // console.log(`inside singup router`)
   try {
     //validate all require fields
     if (

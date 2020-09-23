@@ -7,7 +7,7 @@ const { expectCt } = require("helmet")
 describe('authRouter', () => {
     beforeEach(async () => {
         // how to migrate, and run seed on js
-        await db.migrate.rollback('all')
+        await db.migrate.rollback()
         await db.migrate.latest()
         await db.seed.run()
 
@@ -50,9 +50,20 @@ describe('authRouter', () => {
                     expect(res.body.message).toMatch(/please provide username and password and the password shoud be alphanumeric/i)
                 })
         })
-        //     it(`should respond 404 when there is no password`, () => {
+        it(`should respond 404 when first_name, and last_name are missing`, async () => {
+            return supertest(server)
+                .post(`/api/auth/signup`)
+                .send({
+                    email: 'testing2@hotmail.com',
+                    password: 'admin',
 
-        //     })
+                })
+                .then(res => {
+                    // expect(res.status).toBe(404)
+                    expect(res.body).toMatch(/pl/i)
+                })
+
+        })
         //     it(`should respond 404 when there is no email`, () => {
 
         //     })
