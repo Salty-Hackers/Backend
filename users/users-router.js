@@ -144,9 +144,6 @@ router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res,
 })
 router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
   try {
-
-
-
     const addedUserFavoriteComment = await Users.addUserFavoriteComment(req.params.id, req.params.comment_id)
 
     res.status(200).json({ message: `Successfully added comment to has a favorite `, addedUserFavoriteComment })
@@ -157,18 +154,9 @@ router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, asy
 })
 router.delete('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
   try {
-    let userData = await Users.findById(req.params.id)
-    const userFavoriteComments = await Users.findUserFavoriteComments(req.params.id)
-    userData = {
-      ...userData,
-      userFavoriteComments
-    }
-    delete userData.password
-    if (userFavoriteComments.length) {
-      res.status(200).json(userData)
-    } else {
-      res.status(404).json({ message: 'User has no favorite comments' })
-    }
+    const deletedUserFavoriteComment = await Users.deleteUserFavoriteComment(req.params.id, req.params.comment_id)
+
+    res.status(200).json({ message: `Successfully added comment to has a favorite `, deletedUserFavoriteComment })
   } catch (error) {
     next(error)
   }
