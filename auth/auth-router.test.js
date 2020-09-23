@@ -1,11 +1,11 @@
 const supertest = require("supertest")
 
-const authRouter = require("../api/server")
+const server = require("../api/server")
 const db = require("../database/dbConfig")
 const { expectCt } = require("helmet")
 
 describe('authRouter', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
         // how to migrate, and run seed on js
         await db.migrate.rollback('all')
         await db.migrate.latest()
@@ -23,7 +23,7 @@ describe('authRouter', () => {
         it(`should respond 200 when right amount of data is given`, () => {
             // expect(true).toBe(true)
 
-            return supertest(authRouter)
+            return supertest(server)
                 .post(`/api/auth/signup`)
                 .send({
                     first_name: 'royer',
@@ -36,9 +36,20 @@ describe('authRouter', () => {
                     expect(res.body.message).toBe(`User sucessfully made.`)
                 })
         })
-        //     it(`should respond 404 when password is not a string`, () => {
-
-        //     })
+        it(`should respond 404 when password is not a string`, () => {
+            return supertest(server)
+                .post(`/api/auth/signup`)
+                .send({
+                    first_name: 'royer',
+                    last_name: 'adames',
+                    email: 'testing2@hotmail.com',
+                    password: 1,
+                })
+                .then(res => {
+                    expect(res.status).toBe(404)
+                    expect(res.body.message).toMatch(/please provide username and password and the password shoud be alphanumeric/i)
+                })
+        })
         //     it(`should respond 404 when there is no password`, () => {
 
         //     })
