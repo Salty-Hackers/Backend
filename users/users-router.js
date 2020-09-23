@@ -61,6 +61,24 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
   }
 
 })
+router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
+  try {
+    let userData = await Users.findById(req.params.id)
+    const userFavoriteComments = await Users.findUserFavoriteComments(req.params.id)
+    userData = {
+      ...userData,
+      userFavoriteComments
+    }
+    if (userFavoriteComments.length) {
+      res.status(200).json(userData)
+    } else {
+      res.status(404).json({ message: 'User has no favorite comments' })
+    }
+  } catch (error) {
+    next(error)
+  }
+
+})
 router.get('/:id', restricted, validateUserId, (req, res, next) => {
   // console.log('users get /')
 
