@@ -54,6 +54,7 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
       ...userData,
       userComments
     }
+    delete userData.password
     if (userComments.length) {
       res.status(200).json(userData)
     } else {
@@ -72,6 +73,7 @@ router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res,
       ...userData,
       userFavoriteComments
     }
+    delete userData.password
     if (userFavoriteComments.length) {
       res.status(200).json(userData)
     } else {
@@ -114,7 +116,7 @@ router.delete("/:id", restricted, validateUserId, (req, res, next) => {
   // console.log(req.jwt.department)
 
   //take away the returning password
-  req.user.password = ``
+  delete req.user.password
 
   Users.deleteUser(req.params.id)
     .then(() => {
