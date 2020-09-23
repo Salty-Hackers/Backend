@@ -50,42 +50,19 @@ describe('authRouter', () => {
                     expect(res.body.message).toMatch(/please provide username and password and the password shoud be alphanumeric/i)
                 })
         })
-        it(`should respond 404 when first_name, and last_name are missing`, async () => {
-            return supertest(server)
-                .post(`/api/auth/signup`)
-                .send({
-                    email: 'testing2@hotmail.com',
-                    password: 'admin',
+        describe(`post /login`, () => {
+            it(``, () => {
 
-                })
-                .then(res => {
-                    // expect(res.status).toBe(404)
-                    expect(res.body).toMatch(/pl/i)
-                })
+            })
+            //     it(``, () => {
 
+            //     })
+            //     it(``, () => {
+
+            //     })
+            //     it(``, () => {
+
+            //     })
         })
-        //     it(`should respond 404 when there is no email`, () => {
-
-        //     })
-        //     it(`should respond 404 when there is no first_name`, () => {
-
-        //     })
-        //     it(`should respond 404 when there is no last_name`, () => {
-
-        //     })
-        // })
-        // describe(`post /login`, () => {
-        //     it(``, () => {
-
-        //     })
-        //     it(``, () => {
-
-        //     })
-        //     it(``, () => {
-
-        //     })
-        //     it(``, () => {
-
-        //     })
     })
 }) 
