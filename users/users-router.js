@@ -154,7 +154,6 @@ router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, asy
 })
 router.delete('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
   try {
-    console.log(`inside delete favorite`)
     const deletedUserFavoriteComment = await Users.deleteUserFavoriteComment(req.params.id, req.params.comment_id)
 
     res.status(200).json({ message: `Successfully added comment to has a favorite `, deletedUserFavoriteComment })
