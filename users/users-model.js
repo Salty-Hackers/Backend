@@ -10,9 +10,22 @@ module.exports = {
   deleteUser,
   userCommentsById,
   updateUser,
-  addUserFavoriteComments
+  addUserFavoriteComment,
+  deleteUserFavoriteComment,
 }
-async function addUserFavoriteComments(user_id, comment_id) {
+function deleteUserFavoriteComment(user_id, comment_id) {
+  try {
+    const deletedComment = Comments.findById(comment_id)
+    await db('favorite_comments')
+      .where({ user_id, comment_id })
+      .del()
+    return deletedComment
+  } catch (error) {
+    return error
+  }
+}
+
+async function addUserFavoriteComment(user_id, comment_id) {
   try {
     await db('favorite_comments')
       .insert({ user_id, comment_id })
