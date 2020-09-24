@@ -32,8 +32,8 @@ server.use((err, req, res, next) => {
 server.use('/api/auth', authRouter)
 server.use('/api/users', authenticate, userRouter)
 server.use('/api/comments', authenticate, commentsRouter)
-server.get('/', ( req, res, next) => {
-    res.status(200).json({Message: `Server is up. See documentation at https://documenter.getpostman.com/view/11996006/TVKBZeKE#8dc53815-0741-43ef-9d12-937fc5b94b50`})
+server.get('/', (req, res, next) => {
+    res.status(200).json({ Message: `Server is up. See documentation at https://documenter.getpostman.com/view/11996006/TVKBZeKE#8dc53815-0741-43ef-9d12-937fc5b94b50` })
 })
 
 module.exports = server

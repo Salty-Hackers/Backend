@@ -87,20 +87,7 @@ router.put("/:id", restricted, validateData, validateCommentsId, (req, res, next
 })
 
 
-router.put('/:id/favoritecomments', restricted, validateCommentsId, async (req, res, next) => {
-  try {
-    if (!(typeof (req.body.favorite) === 'boolean')) {
-      res.status(404).json({ error: `favorite need to be true or false` })
-    }
 
-    await Comments.setfavoriteComment(req.params.id, req.body.favorite)
-    res.status(200).json({ message: ` ${req.body.favorite ? `Successfully made comment a favorite` : `Comment is not a favorite`}` })
-
-  } catch (error) {
-    next(error)
-  }
-
-})
 // local middleware
 function validateData(req, res, next) {
   if (!req.body.comment && !req.body.negativity && !req.body.user_id) {
@@ -121,3 +108,4 @@ function validateCommentsId(req, res, next) {
     .catch(next)
 }
 module.exports = router
+

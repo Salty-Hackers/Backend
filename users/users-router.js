@@ -4,8 +4,10 @@ const router = require("express").Router()
 // file imports
 const Users = require("./users-model.js")
 const restricted = require("../auth/authenticate-middleware")
+const Comments = require('../comments/comments-model')
 
-// user endpooints
+// user endpoints
+// get user data
 router.get("/", restricted, (req, res, next) => {
 
   // console.log('users get /')
@@ -26,26 +28,29 @@ router.get("/", restricted, (req, res, next) => {
     })
     .catch(next)
 })
-
-router.get('/comments', restricted, (req, res, next) => {
-  // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
-
-  Users.findUsersComments()
-    .then(users => {
-
-      // console.log(`inside findBy`)
-      // console.log(users)
-
-      if (users.length) {
-        res.status(200).json(users)
-      } else {
-        res.status(404).json({ message: 'no users at the moment' })
-      }
-    })
-    .catch(next)
+router.get('/:id', restricted, validateUserId, (req, res, next) => {
+  res.status(200).json(req.user)
 })
+
+// router.get('/comments', restricted, (req, res, next) => {
+//   // console.log('users get /')
+//   // console.log(req.jwt)
+//   // console.log(req.jwt.department)
+
+//   Users.findUsersComments()
+//     .then(users => {
+
+//       // console.log(`inside findBy`)
+//       // console.log(users)
+
+//       if (users.length) {
+//         res.status(200).json(users)
+//       } else {
+//         res.status(404).json({ message: 'User has no comments' })
+//       }
+//     })
+//     .catch(next)
+// })
 router.get('/:id/comments', restricted, validateUserId, async (req, res, next) => {
   try {
     let userData = await Users.findById(req.params.id)
@@ -66,30 +71,18 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
 
 })
 
-router.get('/:id', restricted, validateUserId, (req, res, next) => {
-  // console.log('users get /')
-
-  res.status(200).json(req.user)
-
-
-})
-router.post("/", restricted, validateEntryData, (req, res, next) => {
-
-  // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
-
-  Users.add(req.body)
-    .then(() => {
-
-      // console.log(`inside findBy`)
-      // console.log(users)
-
-      res.status(201).end()
-
+//update user information
+router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, next) => {
+  Users.updateUser(req.params.id, req.body)
+    .then(updatedUser => {
+      delete updatedUser.password
+      res.status(200).json({ updatedUser })
     })
     .catch(next)
 })
+
+//delete user data
+// can add a trestriction that only the user can delete it self
 
 router.delete("/:id", restricted, validateUserId, (req, res, next) => {
 
@@ -113,16 +106,8 @@ router.delete("/:id", restricted, validateUserId, (req, res, next) => {
     })
     .catch(next)
 })
-router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, next) => {
-  Users.updateUser(req.params.id, req.body)
-    .then(updatedUser => {
-      updatedUser.password = ``
-      res.status(200).json({ updatedUser })
-    })
-    .catch(next)
-})
 
-// favorites comments
+// user favorites comments
 router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
   try {
     let userData = await Users.findById(req.params.id)
@@ -144,7 +129,12 @@ router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res,
 })
 router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
   try {
-    const addedUserFavoriteComment = await Users.addUserFavoriteComment(req.params.id, req.params.comment_id)
+    // validate commend ID
+    const comment = await Comments.findById(req.params.comment_id)
+    comment ? null : res.status(404).json({ error: `Invalid ID` })
+
+
+    const addedUserFavoriteComment = await Users.addUserFavoriteComment(req.params.id, comment.id)
 
     res.status(200).json({ message: `Successfully added comment to has a favorite `, addedUserFavoriteComment })
   } catch (error) {
@@ -152,6 +142,8 @@ router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, asy
   }
 
 })
+
+// can add a trestriction that only the user can delete it's own favorite comment
 router.delete('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
   try {
     const deletedUserFavoriteComment = await Users.deleteUserFavoriteComment(req.params.id, req.params.comment_id)
@@ -198,6 +190,7 @@ function validateUserId(req, res, next) {
     .then((user) => {
       if (user) {
         //get users store and pass it down to the other router so they don't have to make a 2 call
+        delete user.password
         req.user = user
         next()
       } else {
