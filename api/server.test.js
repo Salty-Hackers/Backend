@@ -4,10 +4,8 @@ const server = require("./server")
 const db = require("../database/dbConfig")
 
 describe('authRouter', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         // how to migrate, and run seed on js
-        await db.migrate.rollback()
-        await db.migrate.latest()
         await db.seed.run()
 
     })
@@ -41,7 +39,7 @@ describe('authRouter', () => {
                 .send({
                     first_name: 'royer',
                     last_name: 'adames',
-                    email: 'testing2@hotmail.com',
+                    email: 'testing1@hotmail.com',
                     password: 1,
                 })
                 .then(res => {
@@ -49,28 +47,38 @@ describe('authRouter', () => {
                     expect(res.body.message).toMatch(/please provide username and password and the password shoud be alphanumeric/i)
                 })
         })
-        describe(`post /login`, () => {
-            it(`should return 200`, () => {
-                return supertest(server)
-                    .post(`/api/auth/signup`)
-                    .send({
-                        email: 'Alexis_Keebler23@hotmail.com',
-                        password: 'testpassword',
-                    })
-                    .then(res => {
-                        expect(res.status).toBe(200)
-                        // expect(res.body.message).toMatch(/please provide username and password and the password shoud be alphanumeric/i)
-                    })
-            })
-            //     it(``, () => {
 
-            //     })
-            //     it(``, () => {
-
-            //     })
-            //     it(``, () => {
-
-            //     })
-        })
     })
-}) 
+    describe(`post /login`, () => {
+        it(`should return 404`, () => {
+            return supertest(server)
+                .post(`/api/auth/login`)
+                .send({
+                    email: 'Alexis_Keebler23@hotmail.com',
+                    password: 'testpassword',
+                })
+                .then(res => {
+                    console.log(res.body)
+                    expect(res.status).toBe(404)
+                    expect(res.body.message).toMatch(/Invalid credentials/i)
+                })
+        })
+        it(`should return 200`, () => {
+            return supertest(server)
+                .post(`/api/auth/login`)
+                .send({
+                    email: 'Narciso28@hotmail.com',
+                    password: 'testpassword',
+                })
+                .then(res => {
+                    expect(res.status).toBe(200)
+                    expect(res.body.user.firstName).toMatch(/Antone/i)
+                    expect(res.body.user.lastName).toMatch(/Corkery/i)
+                })
+        })
+
+    })
+})
+
+describe(`userRouter`, () => {
+})
