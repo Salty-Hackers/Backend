@@ -5,7 +5,8 @@ const router = require("express").Router()
 const Users = require("./users-model.js")
 const restricted = require("../auth/authenticate-middleware")
 
-// user endpooints
+// user endpoints
+// get user data
 router.get("/", restricted, (req, res, next) => {
 
   // console.log('users get /')
@@ -26,7 +27,6 @@ router.get("/", restricted, (req, res, next) => {
     })
     .catch(next)
 })
-
 router.get('/comments', restricted, (req, res, next) => {
   // console.log('users get /')
   // console.log(req.jwt)
@@ -65,7 +65,6 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
   }
 
 })
-
 router.get('/:id', restricted, validateUserId, (req, res, next) => {
   // console.log('users get /')
 
@@ -73,24 +72,18 @@ router.get('/:id', restricted, validateUserId, (req, res, next) => {
 
 
 })
-router.post("/", restricted, validateEntryData, (req, res, next) => {
 
-  // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
-
-  Users.add(req.body)
-    .then(() => {
-
-      // console.log(`inside findBy`)
-      // console.log(users)
-
-      res.status(201).end()
-
+//update user information
+router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, next) => {
+  Users.updateUser(req.params.id, req.body)
+    .then(updatedUser => {
+      updatedUser.password = ``
+      res.status(200).json({ updatedUser })
     })
     .catch(next)
 })
 
+//delete user data
 router.delete("/:id", restricted, validateUserId, (req, res, next) => {
 
   // console.log('users get /')
@@ -113,16 +106,8 @@ router.delete("/:id", restricted, validateUserId, (req, res, next) => {
     })
     .catch(next)
 })
-router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, next) => {
-  Users.updateUser(req.params.id, req.body)
-    .then(updatedUser => {
-      updatedUser.password = ``
-      res.status(200).json({ updatedUser })
-    })
-    .catch(next)
-})
 
-// favorites comments
+// user favorites comments
 router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
   try {
     let userData = await Users.findById(req.params.id)
