@@ -170,7 +170,7 @@ describe(`userRouter`, () => {
 
         })
 
-        describe(`/:id/favoritecomments/:comment_id`, () => {
+        describe(`POST /:id/favoritecomments/:comment_id`, () => {
             it(`should respond fail `, async () => {
                 const res = await supertest(server)
                     .post(`/api/users/1/favoritecomments/a`)
@@ -187,6 +187,22 @@ describe(`userRouter`, () => {
                 expect(res.status).toBe(200)
                 expect(res.body).toEqual(expect.any(Object))
                 expect(res.body.addedUserFavoriteComment).toEqual(expect.anything())
+                expect(res.body.password).toEqual(undefined)
+
+            })
+
+        })
+        describe(`DELETE /:id/favoritecomments/:comment_id`, () => {
+            it(`should respond with ok `, async () => {
+                const res = await supertest(server)
+                    .delete(`/api/users/1/favoritecomments/16`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(200)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.message).toEqual(expect.anything())
+                expect(res.body.deletedUserFavoriteComment).toEqual(expect.anything())
+                expect(res.body.deletedUserFavoriteComment.comment).toEqual(expect.anything())
+                expect(res.body.deletedUserFavoriteComment.negativity_score).toEqual(expect.anything())
                 expect(res.body.password).toEqual(undefined)
 
             })
