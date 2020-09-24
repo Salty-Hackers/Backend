@@ -4,6 +4,7 @@ const router = require("express").Router()
 // file imports
 const Users = require("./users-model.js")
 const restricted = require("../auth/authenticate-middleware")
+const Comments = require('../comments/comments-model')
 
 // user endpoints
 // get user data
@@ -126,7 +127,12 @@ router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res,
 })
 router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
   try {
-    const addedUserFavoriteComment = await Users.addUserFavoriteComment(req.params.id, req.params.comment_id)
+    // validate commend ID
+    const comment = await Comments.findById(req.params.comment_id)
+    comment ? null : res.status(404).json({ error: `Invalid ID` })
+
+
+    const addedUserFavoriteComment = await Users.addUserFavoriteComment(req.params.id, comment.id)
 
     res.status(200).json({ message: `Successfully added comment to has a favorite `, addedUserFavoriteComment })
   } catch (error) {

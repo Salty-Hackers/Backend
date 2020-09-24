@@ -170,5 +170,27 @@ describe(`userRouter`, () => {
 
         })
 
+        describe(`/:id/favoritecomments/:comment_id`, () => {
+            it(`should respond fail `, async () => {
+                const res = await supertest(server)
+                    .post(`/api/users/1/favoritecomments/a`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(404)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.error).toEqual(expect.anything())
+                expect(res.body.password).toEqual(undefined)
+            })
+            it(`should respond with 200 status `, async () => {
+                const res = await supertest(server)
+                    .post(`/api/users/1/favoritecomments/16`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(200)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.addedUserFavoriteComment).toEqual(expect.anything())
+                expect(res.body.password).toEqual(undefined)
+
+            })
+
+        })
     })
 })
