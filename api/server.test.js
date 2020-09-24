@@ -127,6 +127,22 @@ describe(`userRouter`, () => {
             })
 
         })
+        describe(`get /comments`, () => {
+            it(`should respond with a failer status `, async () => {
+                const res = await supertest(server)
+                    .get(`/api/users/1/comments`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(200)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.password).toEqual(undefined)
+                expect(res.body).toMatchObject({
+                    first_name: 'Antone',
+                    last_name: 'Corkery',
+                    email: 'Narciso28@hotmail.com',
+                })
+            })
+
+        })
 
     })
 })
