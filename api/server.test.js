@@ -244,7 +244,7 @@ describe(`/api/users`, () => {
 })
 
 describe(`api/comments`, () => {
-    describe(`GET /`, () => {
+    describe(`/ GET `, () => {
         it(`should successed`, async () => {
             const res = await supertest(server)
                 .get(`/api/comments/`)
@@ -258,7 +258,7 @@ describe(`api/comments`, () => {
             expect(res.body[0].negativity_score).toEqual(expect.anything())
         })
     })
-    describe(`GET /:id`, () => {
+    describe(`/:id GET `, () => {
         it(`should successed`, async () => {
             const res = await supertest(server)
                 .get(`/api/comments/1`)
@@ -273,7 +273,27 @@ describe(`api/comments`, () => {
         })
     })
 
-    describe(`/:id/favoritecomments PUT`, () => {
+    describe(`/:id PUT`, () => {
+        it(`should successed`, async () => {
+            const res = await supertest(server)
+                .put(`/api/comments/4`)
+                .set(`authorization`, token)
+                .send({
+                    comment: '@@@Try to quantify the XSS port, maybe it will generate the redundant monitor, ROYER!',
+                    negativity_score: 410494,
+                    user_id: 10
+                })
+
+            expect(res.status).toBe(200)
+            expect(res.body.updateComment).toEqual(expect.any(Object))
+            expect(res.body.updateComment.id).toEqual(expect.anything())
+            expect(res.body.updateComment.user_id).toEqual(expect.anything())
+            expect(res.body.updateComment.comment).toEqual(expect.anything())
+            expect(res.body.updateComment.negativity_score).toEqual(expect.anything())
+        })
+    })
+
+    describe(`/ POST `, () => {
         it(`should successed`, async () => {
             const res = await supertest(server)
                 .post(`/api/comments/`)
@@ -291,24 +311,5 @@ describe(`api/comments`, () => {
             expect(res.body.comment).toEqual(expect.anything())
             expect(res.body.negativity_score).toEqual(expect.anything())
         })
-
-        escribe(`/ POST `, () => {
-            it(`should successed`, async () => {
-                const res = await supertest(server)
-                    .post(`/api/comments/`)
-                    .set(`authorization`, token)
-                    .send({
-                        comment: '@new comment, maybe it will generate the redundant monitor, ROYER!',
-                        negativity_score: 410494,
-                        user_id: 10
-                    })
-
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.id).toEqual(expect.anything())
-                expect(res.body.user_id).toEqual(expect.anything())
-                expect(res.body.comment).toEqual(expect.anything())
-                expect(res.body.negativity_score).toEqual(expect.anything())
-            })
-        })
     })
+})
