@@ -3,6 +3,8 @@ const supertest = require("supertest")
 const server = require("./server")
 const db = require("../database/dbConfig")
 
+let token
+
 describe('authRouter', () => {
     beforeAll(async () => {
         // how to migrate, and run seed on js
@@ -74,6 +76,7 @@ describe('authRouter', () => {
                     expect(res.status).toBe(200)
                     expect(res.body.user.firstName).toMatch(/Antone/i)
                     expect(res.body.user.lastName).toMatch(/Corkery/i)
+                    token = res.body.token
                 })
         })
 
@@ -81,4 +84,14 @@ describe('authRouter', () => {
 })
 
 describe(`userRouter`, () => {
+    describe(`userRouter`, () => {
+        describe(`get /`, () => {
+            it(`should respond 401 when there is no authorization header`, async () => {
+                const res = await supertest(server)
+                    .get(`/api/users/`)
+                expect(res.status).toBe(401)
+                expect(res.body.message).toMatch(/No token/i)
+            })
+        })
+    })
 })
