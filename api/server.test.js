@@ -258,4 +258,18 @@ describe(`api/comments`, () => {
             expect(res.body[0].negativity_score).toEqual(expect.anything())
         })
     })
+    describe(`/:id`, () => {
+        it(`should successed`, async () => {
+            const res = await supertest(server)
+                .get(`/api/comments/1`)
+                .set(`authorization`, token)
+
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.id).toEqual(expect.anything())
+            expect(res.body.user_id).toEqual(expect.anything())
+            expect(res.body.comment).toEqual(expect.anything())
+            expect(res.body.negativity_score).toEqual(expect.anything())
+        })
+    })
 })
