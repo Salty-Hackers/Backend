@@ -75,7 +75,7 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
 router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, next) => {
   Users.updateUser(req.params.id, req.body)
     .then(updatedUser => {
-      updatedUser.password = ``
+      delete updatedUser.password
       res.status(200).json({ updatedUser })
     })
     .catch(next)

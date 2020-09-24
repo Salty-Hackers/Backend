@@ -221,5 +221,26 @@ describe(`userRouter`, () => {
             })
 
         })
+        describe(`UPDATE a user`, () => {
+            it(`should respond with ok `, async () => {
+                const res = await supertest(server)
+                    .put(`/api/users/4`)
+                    .set(`authorization`, token)
+                    .send({
+                        first_name: 'Lambda',
+                        last_name: 'was here',
+                        email: 'Cyrus_Hahn@gmail.com'
+                    })
+                expect(res.status).toBe(200)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.updatedUser.id).toEqual(expect.anything())
+                expect(res.body.updatedUser.first_name).toEqual(expect.anything())
+                expect(res.body.updatedUser.last_name).toEqual(expect.anything())
+                expect(res.body.updatedUser.email).toEqual(expect.anything())
+                expect(res.body.updatedUser.password).toEqual(undefined)
+
+            })
+
+        })
     })
 })
