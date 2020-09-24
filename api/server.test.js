@@ -5,7 +5,7 @@ const db = require("../database/dbConfig")
 
 let token
 
-describe('authRouter', () => {
+describe('/api/auth', () => {
     beforeAll(async () => {
         // how to run seed on js
         await db.seed.run()
@@ -83,164 +83,179 @@ describe('authRouter', () => {
     })
 })
 
-describe(`userRouter`, () => {
-    describe(`userRouter`, () => {
-        describe(`validateUserId`, () => {
-            it(`should check if the user didn't pass a valid user ID `, async () => {
-                const res = await supertest(server)
-                    .get(`/api/users/notAnID`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(404)
-                expect(res.body.error).toMatch(/Invalid ID/i)
-                expect(res.body).toEqual(expect.any(Object))
-
-            })
+describe(`/api/users`, () => {
+    describe(`validateUserId`, () => {
+        it(`should check if the user didn't pass a valid user ID `, async () => {
+            const res = await supertest(server)
+                .get(`/api/users/notAnID`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(404)
+            expect(res.body.error).toMatch(/Invalid ID/i)
+            expect(res.body).toEqual(expect.any(Object))
 
         })
-        describe(`get /`, () => {
-            it(`should respond 401 when there is no authorization header`, async () => {
-                const res = await supertest(server)
-                    .get(`/api/users/`)
-                expect(res.status).toBe(401)
-                expect(res.body.message).toMatch(/No token/i)
-            })
-            it(`should respond 200 when there is a valid authorization header`, async () => {
-                const res = await supertest(server)
-                    .get(`/api/users/`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Array))
+
+    })
+    describe(`get /`, () => {
+        it(`should respond 401 when there is no authorization header`, async () => {
+            const res = await supertest(server)
+                .get(`/api/users/`)
+            expect(res.status).toBe(401)
+            expect(res.body.message).toMatch(/No token/i)
+        })
+        it(`should respond 200 when there is a valid authorization header`, async () => {
+            const res = await supertest(server)
+                .get(`/api/users/`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Array))
+        })
+    })
+    describe(`get /:id`, () => {
+        it(`should respond 200 `, async () => {
+            const res = await supertest(server)
+                .get(`/api/users/1`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.password).toEqual(undefined)
+            expect(res.body.id).toEqual(1)
+            expect(res.body.first_name).toMatch(/Antone/i)
+            expect(res.body.last_name).toMatch(/Corkery/i)
+            expect(res.body.email).toMatch(/Narciso28@hotmail.com/i)
+        })
+
+    })
+    describe(`get /comments`, () => {
+        it(`should respond with 200 status `, async () => {
+            const res = await supertest(server)
+                .get(`/api/users/1/comments`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.password).toEqual(undefined)
+            expect(res.body).toMatchObject({
+                first_name: 'Antone',
+                last_name: 'Corkery',
+                email: 'Narciso28@hotmail.com',
             })
         })
-        describe(`get /:id`, () => {
-            it(`should respond 200 `, async () => {
-                const res = await supertest(server)
-                    .get(`/api/users/1`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.password).toEqual(undefined)
-                expect(res.body.id).toEqual(1)
-                expect(res.body.first_name).toMatch(/Antone/i)
-                expect(res.body.last_name).toMatch(/Corkery/i)
-                expect(res.body.email).toMatch(/Narciso28@hotmail.com/i)
+
+    })
+    describe(`/:id/favoritecomments`, () => {
+        it(`should respond with 404 status `, async () => {
+            const res = await supertest(server)
+                .get(`/api/users/1/favoritecomments`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(404)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.password).toEqual(undefined)
+            expect(res.body).toMatchObject({
+                message: /user has no favorite comments/i
             })
+        })
+        it(`should respond with 200 status `, async () => {
+            const res = await supertest(server)
+                .get(`/api/users/2/favoritecomments`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.userFavoriteComments).toEqual(expect.any(Array))
+            expect(res.body.password).toEqual(undefined)
+            expect(res.body.userFavoriteComments[0]).toMatchObject({
+                comment: /The AGP bandwidth is down, connect the multi-byte card so we can calculate the SSL panel!/i
+            })
+        })
+
+    })
+
+    describe(`POST /:id/favoritecomments/:comment_id`, () => {
+        it(`should respond fail `, async () => {
+            const res = await supertest(server)
+                .post(`/api/users/1/favoritecomments/a`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(404)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.error).toEqual(expect.anything())
+            expect(res.body.password).toEqual(undefined)
+        })
+        it(`should respond with 200 status `, async () => {
+            const res = await supertest(server)
+                .post(`/api/users/1/favoritecomments/16`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.addedUserFavoriteComment).toEqual(expect.anything())
+            expect(res.body.password).toEqual(undefined)
 
         })
-        describe(`get /comments`, () => {
-            it(`should respond with 200 status `, async () => {
-                const res = await supertest(server)
-                    .get(`/api/users/1/comments`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.password).toEqual(undefined)
-                expect(res.body).toMatchObject({
-                    first_name: 'Antone',
-                    last_name: 'Corkery',
-                    email: 'Narciso28@hotmail.com',
+
+    })
+    describe(`DELETE /:id/favoritecomments/:comment_id`, () => {
+        it(`should respond with ok `, async () => {
+            const res = await supertest(server)
+                .delete(`/api/users/1/favoritecomments/16`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.message).toEqual(expect.anything())
+            expect(res.body.deletedUserFavoriteComment).toEqual(expect.anything())
+            expect(res.body.deletedUserFavoriteComment.comment).toEqual(expect.anything())
+            expect(res.body.deletedUserFavoriteComment.negativity_score).toEqual(expect.anything())
+            expect(res.body.password).toEqual(undefined)
+
+        })
+
+    })
+    describe(`DELETE /:id`, () => {
+        it(`should respond with ok `, async () => {
+            const res = await supertest(server)
+                .delete(`/api/users/1`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.message).toEqual(expect.anything())
+            expect(res.body.password).toEqual(undefined)
+
+        })
+
+    })
+    describe(`UPDATE a user`, () => {
+        it(`should respond with ok `, async () => {
+            const res = await supertest(server)
+                .put(`/api/users/4`)
+                .set(`authorization`, token)
+                .send({
+                    first_name: 'Lambda',
+                    last_name: 'was here',
+                    email: 'Cyrus_Hahn@gmail.com'
                 })
-            })
-
-        })
-        describe(`/:id/favoritecomments`, () => {
-            it(`should respond with 404 status `, async () => {
-                const res = await supertest(server)
-                    .get(`/api/users/1/favoritecomments`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(404)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.password).toEqual(undefined)
-                expect(res.body).toMatchObject({
-                    message: /user has no favorite comments/i
-                })
-            })
-            it(`should respond with 200 status `, async () => {
-                const res = await supertest(server)
-                    .get(`/api/users/2/favoritecomments`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.userFavoriteComments).toEqual(expect.any(Array))
-                expect(res.body.password).toEqual(undefined)
-                expect(res.body.userFavoriteComments[0]).toMatchObject({
-                    comment: /The AGP bandwidth is down, connect the multi-byte card so we can calculate the SSL panel!/i
-                })
-            })
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.updatedUser.id).toEqual(expect.anything())
+            expect(res.body.updatedUser.first_name).toEqual(expect.anything())
+            expect(res.body.updatedUser.last_name).toEqual(expect.anything())
+            expect(res.body.updatedUser.email).toEqual(expect.anything())
+            expect(res.body.updatedUser.password).toEqual(undefined)
 
         })
 
-        describe(`POST /:id/favoritecomments/:comment_id`, () => {
-            it(`should respond fail `, async () => {
-                const res = await supertest(server)
-                    .post(`/api/users/1/favoritecomments/a`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(404)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.error).toEqual(expect.anything())
-                expect(res.body.password).toEqual(undefined)
-            })
-            it(`should respond with 200 status `, async () => {
-                const res = await supertest(server)
-                    .post(`/api/users/1/favoritecomments/16`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.addedUserFavoriteComment).toEqual(expect.anything())
-                expect(res.body.password).toEqual(undefined)
+    })
+})
 
-            })
+describe(`api/comments`, () => {
+    describe(`/`, () => {
+        it(`should successed`, async () => {
+            const res = await supertest(server)
+                .get(`/api/comments/`)
+                .set(`authorization`, token)
 
-        })
-        describe(`DELETE /:id/favoritecomments/:comment_id`, () => {
-            it(`should respond with ok `, async () => {
-                const res = await supertest(server)
-                    .delete(`/api/users/1/favoritecomments/16`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.message).toEqual(expect.anything())
-                expect(res.body.deletedUserFavoriteComment).toEqual(expect.anything())
-                expect(res.body.deletedUserFavoriteComment.comment).toEqual(expect.anything())
-                expect(res.body.deletedUserFavoriteComment.negativity_score).toEqual(expect.anything())
-                expect(res.body.password).toEqual(undefined)
-
-            })
-
-        })
-        describe(`DELETE /:id`, () => {
-            it(`should respond with ok `, async () => {
-                const res = await supertest(server)
-                    .delete(`/api/users/1`)
-                    .set(`authorization`, token)
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.message).toEqual(expect.anything())
-                expect(res.body.password).toEqual(undefined)
-
-            })
-
-        })
-        describe(`UPDATE a user`, () => {
-            it(`should respond with ok `, async () => {
-                const res = await supertest(server)
-                    .put(`/api/users/4`)
-                    .set(`authorization`, token)
-                    .send({
-                        first_name: 'Lambda',
-                        last_name: 'was here',
-                        email: 'Cyrus_Hahn@gmail.com'
-                    })
-                expect(res.status).toBe(200)
-                expect(res.body).toEqual(expect.any(Object))
-                expect(res.body.updatedUser.id).toEqual(expect.anything())
-                expect(res.body.updatedUser.first_name).toEqual(expect.anything())
-                expect(res.body.updatedUser.last_name).toEqual(expect.anything())
-                expect(res.body.updatedUser.email).toEqual(expect.anything())
-                expect(res.body.updatedUser.password).toEqual(undefined)
-
-            })
-
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Array))
+            expect(res.body[0].id).toEqual(expect.anything())
+            expect(res.body[0].user_id).toEqual(expect.anything())
+            expect(res.body[0].comment).toEqual(expect.anything())
+            expect(res.body[0].negativity_score).toEqual(expect.anything())
         })
     })
 })
