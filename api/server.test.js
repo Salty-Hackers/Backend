@@ -7,7 +7,7 @@ let token
 
 describe('authRouter', () => {
     beforeAll(async () => {
-        // how to migrate, and run seed on js
+        // how to run seed on js
         await db.seed.run()
 
     })
@@ -91,6 +91,13 @@ describe(`userRouter`, () => {
                     .get(`/api/users/`)
                 expect(res.status).toBe(401)
                 expect(res.body.message).toMatch(/No token/i)
+            })
+            it(`should respond 200 when there is a valid authorization header`, async () => {
+                const res = await supertest(server)
+                    .get(`/api/users/`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(200)
+                expect(res.body).toEqual(expect.any(Array))
             })
         })
     })
