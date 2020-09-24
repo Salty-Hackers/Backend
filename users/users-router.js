@@ -82,6 +82,8 @@ router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, ne
 })
 
 //delete user data
+// can add a trestriction that only the user can delete it self
+
 router.delete("/:id", restricted, validateUserId, (req, res, next) => {
 
   // console.log('users get /')
@@ -140,6 +142,8 @@ router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, asy
   }
 
 })
+
+// can add a trestriction that only the user can delete it's own favorite comment
 router.delete('/:id/favoritecomments/:comment_id', restricted, validateUserId, async (req, res, next) => {
   try {
     const deletedUserFavoriteComment = await Users.deleteUserFavoriteComment(req.params.id, req.params.comment_id)

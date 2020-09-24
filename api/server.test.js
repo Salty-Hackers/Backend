@@ -208,5 +208,18 @@ describe(`userRouter`, () => {
             })
 
         })
+        describe(`DELETE /:id`, () => {
+            it(`should respond with ok `, async () => {
+                const res = await supertest(server)
+                    .delete(`/api/users/1`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(200)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.message).toEqual(expect.anything())
+                expect(res.body.password).toEqual(undefined)
+
+            })
+
+        })
     })
 })
