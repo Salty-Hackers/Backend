@@ -128,7 +128,7 @@ describe(`userRouter`, () => {
 
         })
         describe(`get /comments`, () => {
-            it(`should respond with a failer status `, async () => {
+            it(`should respond with 200 status `, async () => {
                 const res = await supertest(server)
                     .get(`/api/users/1/comments`)
                     .set(`authorization`, token)
@@ -139,6 +139,32 @@ describe(`userRouter`, () => {
                     first_name: 'Antone',
                     last_name: 'Corkery',
                     email: 'Narciso28@hotmail.com',
+                })
+            })
+
+        })
+        describe(`/:id/favoritecomments`, () => {
+            it(`should respond with 404 status `, async () => {
+                const res = await supertest(server)
+                    .get(`/api/users/1/favoritecomments`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(404)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.password).toEqual(undefined)
+                expect(res.body).toMatchObject({
+                    message: /user has no favorite comments/i
+                })
+            })
+            it(`should respond with 200 status `, async () => {
+                const res = await supertest(server)
+                    .get(`/api/users/2/favoritecomments`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(200)
+                expect(res.body).toEqual(expect.any(Object))
+                expect(res.body.userFavoriteComments).toEqual(expect.any(Array))
+                expect(res.body.password).toEqual(undefined)
+                expect(res.body.userFavoriteComments[0]).toMatchObject({
+                    comment: /The AGP bandwidth is down, connect the multi-byte card so we can calculate the SSL panel!/i
                 })
             })
 
