@@ -244,7 +244,7 @@ describe(`/api/users`, () => {
 })
 
 describe(`api/comments`, () => {
-    describe(`/`, () => {
+    describe(`GET /`, () => {
         it(`should successed`, async () => {
             const res = await supertest(server)
                 .get(`/api/comments/`)
@@ -258,11 +258,30 @@ describe(`api/comments`, () => {
             expect(res.body[0].negativity_score).toEqual(expect.anything())
         })
     })
-    describe(`/:id`, () => {
+    describe(`GET /:id`, () => {
         it(`should successed`, async () => {
             const res = await supertest(server)
                 .get(`/api/comments/1`)
                 .set(`authorization`, token)
+
+            expect(res.status).toBe(200)
+            expect(res.body).toEqual(expect.any(Object))
+            expect(res.body.id).toEqual(expect.anything())
+            expect(res.body.user_id).toEqual(expect.anything())
+            expect(res.body.comment).toEqual(expect.anything())
+            expect(res.body.negativity_score).toEqual(expect.anything())
+        })
+    })
+    describe(`POST /`, () => {
+        it(`should successed`, async () => {
+            const res = await supertest(server)
+                .post(`/api/comments/`)
+                .set(`authorization`, token)
+                .send({
+                    comment: '@new comment, maybe it will generate the redundant monitor, ROYER!',
+                    negativity_score: 410494,
+                    user_id: 10
+                })
 
             expect(res.status).toBe(200)
             expect(res.body).toEqual(expect.any(Object))
