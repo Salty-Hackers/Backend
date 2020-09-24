@@ -292,6 +292,19 @@ describe(`api/comments`, () => {
             expect(res.body.updateComment.negativity_score).toEqual(expect.anything())
         })
     })
+    describe(`/:id DELETE`, () => {
+        it(`should successed`, async () => {
+            const res = await supertest(server)
+                .delete(`/api/comments/4`)
+                .set(`authorization`, token)
+            expect(res.status).toBe(200)
+            expect(res.body.deleteComment).toEqual(expect.any(Object))
+            expect(res.body.deleteComment.id).toEqual(expect.anything())
+            expect(res.body.deleteComment.user_id).toEqual(expect.anything())
+            expect(res.body.deleteComment.comment).toEqual(expect.anything())
+            expect(res.body.deleteComment.negativity_score).toEqual(expect.anything())
+        })
+    })
 
     describe(`/ POST `, () => {
         it(`should successed`, async () => {
