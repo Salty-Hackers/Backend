@@ -85,6 +85,18 @@ describe('authRouter', () => {
 
 describe(`userRouter`, () => {
     describe(`userRouter`, () => {
+        describe(`validateUserId`, () => {
+            it(`should check if the user didn't pass a valid user ID `, async () => {
+                const res = await supertest(server)
+                    .get(`/api/users/notAnID`)
+                    .set(`authorization`, token)
+                expect(res.status).toBe(404)
+                expect(res.body.error).toMatch(/Invalid ID/i)
+                expect(res.body).toEqual(expect.any(Object))
+
+            })
+
+        })
         describe(`get /`, () => {
             it(`should respond 401 when there is no authorization header`, async () => {
                 const res = await supertest(server)
@@ -113,13 +125,8 @@ describe(`userRouter`, () => {
                 expect(res.body.last_name).toMatch(/Corkery/i)
                 expect(res.body.email).toMatch(/Narciso28@hotmail.com/i)
             })
-            // it(`should respond 200 when there is a valid authorization header`, async () => {
-            //     const res = await supertest(server)
-            //         .get(`/api/users/1`)
-            //         .set(`authorization`, token)
-            //     expect(res.status).toBe(200)
-            //     expect(res.body).toEqual(expect.any(Array))
-            // })
+
         })
+
     })
 })
