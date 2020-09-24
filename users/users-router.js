@@ -27,6 +27,10 @@ router.get("/", restricted, (req, res, next) => {
     })
     .catch(next)
 })
+router.get('/:id', restricted, validateUserId, (req, res, next) => {
+  res.status(200).json(req.user)
+})
+
 router.get('/comments', restricted, (req, res, next) => {
   // console.log('users get /')
   // console.log(req.jwt)
@@ -63,13 +67,6 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
   } catch (error) {
     next(error)
   }
-
-})
-router.get('/:id', restricted, validateUserId, (req, res, next) => {
-  // console.log('users get /')
-
-  res.status(200).json(req.user)
-
 
 })
 
@@ -183,6 +180,7 @@ function validateUserId(req, res, next) {
     .then((user) => {
       if (user) {
         //get users store and pass it down to the other router so they don't have to make a 2 call
+        delete user.password
         req.user = user
         next()
       } else {
