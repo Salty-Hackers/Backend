@@ -22,9 +22,20 @@ exports.up = function (knex) {
                 .onUpdate('CASCADE')
 
         })
+        .table('comments', comments => {
+            comments.integer('saltiest_hacker_id')
+                .unsigned()
+                .notNullable()
+                .references('saltiest_hackers.id')
+                .onDelete('RESTRICT')
+                .onUpdate('CASCADE')
+
+        })
 };
 
 exports.down = function (knex) {
-    return knex.schema.dropTableIfExists("users")
+    return knex.schema.table('comments', comments => {
+        comments.dropColumn('saltiest_hacker_id')
+    }).dropTableIfExists("users")
 
 };
