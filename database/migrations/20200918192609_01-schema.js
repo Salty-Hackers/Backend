@@ -17,23 +17,6 @@ exports.up = function (knex) {
                 .index()
 
         })
-        .createTable('comments', table => {
-            table.increments()
-            table.integer('user_id')
-                .unsigned()
-                .references('users.id')
-                .onDelete('RESTRICT')
-                .onUpdate('CASCADE')
-            table.text('comment')
-                .notNullable()
-            table.integer('saltiest_hacker_id')
-                .unsigned()
-                .notNullable()
-                .references('saltiest_hackers.id')
-                .onDelete('RESTRICT')
-                .onUpdate('CASCADE')
-
-        })
         .createTable('saltiest_hackers', table => {
             table.increments()
 
@@ -48,8 +31,41 @@ exports.up = function (knex) {
                 .onUpdate('CASCADE')
 
         })
+        .createTable('comments', table => {
+            table.increments()
+            table.text('comment')
+                .notNullable()
+            table.integer('saltiest_hacker_id')
+                .unsigned()
+                .notNullable()
+                .references('saltiest_hackers.id')
+                .onDelete('RESTRICT')
+                .onUpdate('CASCADE')
+
+        })
+
+        .createTable('favorite_comments', comments => {
+            comments.increments()
+
+            comments.integer('user_id')
+                .unsigned()
+                .notNullable()
+                .references('users.id')
+                .onDelete('RESTRICT')
+                .onUpdate('CASCADE')
+            comments.integer('comment_id')
+                .unsigned()
+                .notNullable()
+                .references('comments.id')
+                .onDelete('RESTRICT')
+                .onUpdate('CASCADE')
+        })
 }
 
 exports.down = function (knex) {
-    return knex.schema.dropTableIfExists("saltiest_hackers").dropTableIfExists("comments").dropTableIfExists("users")
+    return knex.schema
+        .dropTableIfExists("favorite_comments")
+        .dropTableIfExists("comments")
+        .dropTableIfExists("saltiest_hackers")
+        .dropTableIfExists("users")
 }
