@@ -21,10 +21,13 @@ async function getDSSaltiestHackers() {
     throw error
   }
 }
-
+console.log(getDSSaltiestHackers())
 
 exports.seed = function (knex) {
 
   // Inserts seed entries
-  return knex('saltiest_hackers').insert(getDSSaltiestHackers());
+  return knex('saltiest_hackers').insert({
+    username: 'testing',//username
+    total_score: 1213,//total_Score
+  })
 };
