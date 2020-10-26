@@ -6,24 +6,24 @@ exports.seed = function (knex) {
   // Inserts seed entries
   return knex('favorite_comments').insert([
     {
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      comment_id: faker.random.number({ max: 16, min: 1, precision: 1 }),
+      user_id: 1,
+      comment_id: 6,
     },
     {
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      comment_id: faker.random.number({ max: 16, min: 1, precision: 1 }),
+      user_id: 2,
+      comment_id: 3,
     },
     {
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      comment_id: faker.random.number({ max: 16, min: 1, precision: 1 }),
+      user_id: 2,
+      comment_id: 6,
     },
     {
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      comment_id: faker.random.number({ max: 16, min: 1, precision: 1 }),
+      user_id: 4,
+      comment_id: 5,
     },
     {
-      user_id: faker.random.number({ max: 10, min: 1, precision: 1 }),
-      comment_id: faker.random.number({ max: 16, min: 1, precision: 1 }),
+      user_id: 3,
+      comment_id: 2,
     },
   ]);
 };
