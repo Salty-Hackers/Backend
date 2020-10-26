@@ -58,8 +58,6 @@ function userCommentsById(id) {
 async function deleteUser(id) {
 
   try {
-    // const deleteUserAndComments = await findAUserCommentsById(id)
-
     // delete the user and their comments
     await db("comments")
       .where({ user_id: id })
@@ -87,14 +85,10 @@ function find() {
 }
 
 function findBy(filter) {
-  // console.log(`-- user model inside findBy --`)
-  // console.log(filter)
-
   return db("users")
     .where(filter)
     .orderBy("id")
 }
-
 
 async function add(user) {
   try {

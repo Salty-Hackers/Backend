@@ -4,15 +4,8 @@ const request = require('supertest')
 // prep Test Database
 const prepTestDB = require("../helpers/prepTestDB")
 
-//mock authentication 
-const restrict = require("./authenticate-middleware")
-jest.mock("./authenticate-middleware")
-
 //apply a static state for all tests
 beforeEach(prepTestDB)
-
-// Clear the mock for each test
-beforeEach(() => restrict.mockClear())
 
 describe('Auth_router', () => {
     it('post /signup ', async () => {

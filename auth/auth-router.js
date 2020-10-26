@@ -77,7 +77,6 @@ router.post('/login', async (req, res, next) => {
 
       }
       else {
-        console.log(`inside Users else`)
         res.status(404).json({ message: "Invalid credentials" })
       }
     } catch (error) { next(error) }

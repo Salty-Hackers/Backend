@@ -8,25 +8,20 @@ const Comments = require('../comments/comments-model')
 
 // user endpoints
 // get user data
-router.get("/", restricted, (req, res, next) => {
+router.get("/", restricted, async (req, res, next) => {
+  try {
+    console.log(`in get /`)
+    const users = await Users.find()
 
-  // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
-
-  Users.find()
-    .then(users => {
-
-      // console.log(`inside findBy`)
-      // console.log(users)
-
-      if (users.length) {
-        res.status(200).json(users)
-      } else {
-        res.status(404).json({ message: 'no users at the moment' })
-      }
-    })
-    .catch(next)
+    if (users.length) {
+      res.status(200).json(users)
+    }
+    else {
+      res.status(404).json({ message: 'no users at the moment' })
+    }
+  } catch (error) {
+    next(error)
+  }
 })
 router.get('/:id', restricted, validateUserId, (req, res, next) => {
   res.status(200).json(req.user)
