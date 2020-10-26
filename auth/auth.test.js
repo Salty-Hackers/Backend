@@ -14,8 +14,8 @@ beforeEach(prepTestDB)
 // Clear the mock for each test
 beforeEach(() => restrict.mockClear())
 
-describe('post /signup', () => {
-    it('should respond 200 with the right data', async () => {
+describe('Auth_router', () => {
+    it('post /signup ', async () => {
         const res = await request(server)
             .post(`/api/auth/signup`)
             .send({
@@ -24,9 +24,36 @@ describe('post /signup', () => {
                 email: 'testing2@hotmail.com',
                 password: 'admin',
             })
-
         expect(res.status).toBe(201)
         expect(res.body.message).toBe(`User sucessfully made.`)
-
+    })
+    it('post /login ', async () => {
+        const res = await request(server)
+            .post(`/api/auth/login`)
+            .send({
+                email: 'Narciso28@hotmail.com',
+                password: 'testpassword',
+            })
+        expect(res.status).toBe(200)
+    })
+    it('post /login 404 invalid credentials', async () => {
+        const res = await request(server)
+            .post(`/api/auth/login`)
+            .send({
+                email: 'Narciso28@hotmail.com',
+                password: 'admin',
+            })
+        expect(res.status).toBe(404)
+        expect(res.body.message).toMatch(/Invalid credentials/i)
+    })
+    it('post /login 404 no password and email', async () => {
+        const res = await request(server)
+            .post(`/api/auth/login`)
+            .send({
+                email: '',
+                password: '',
+            })
+        expect(res.status).toBe(404)
+        expect(res.body.message).toMatch(/email and password/i)
     })
 })

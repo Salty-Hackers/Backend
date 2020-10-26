@@ -32,25 +32,6 @@ router.get('/:id', restricted, validateUserId, (req, res, next) => {
   res.status(200).json(req.user)
 })
 
-// router.get('/comments', restricted, (req, res, next) => {
-//   // console.log('users get /')
-//   // console.log(req.jwt)
-//   // console.log(req.jwt.department)
-
-//   Users.findUsersComments()
-//     .then(users => {
-
-//       // console.log(`inside findBy`)
-//       // console.log(users)
-
-//       if (users.length) {
-//         res.status(200).json(users)
-//       } else {
-//         res.status(404).json({ message: 'User has no comments' })
-//       }
-//     })
-//     .catch(next)
-// })
 router.get('/:id/comments', restricted, validateUserId, async (req, res, next) => {
   try {
     let userData = await Users.findById(req.params.id)
@@ -86,23 +67,14 @@ router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, ne
 
 router.delete("/:id", restricted, validateUserId, (req, res, next) => {
 
-  // console.log('users get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
-
   //take away the returning password
   delete req.user.password
 
   Users.deleteUser(req.params.id)
     .then(() => {
-
-      // console.log(`inside deleteUser`)
-      // console.log(DeleteUser)
-
       res.status(200).json({
         message: `The user and their messages have been deleted.`
       })
-
     })
     .catch(next)
 })
@@ -132,7 +104,6 @@ router.post('/:id/favoritecomments/:comment_id', restricted, validateUserId, asy
     // validate commend ID
     const comment = await Comments.findById(req.params.comment_id)
     comment ? null : res.status(404).json({ error: `Invalid ID` })
-
 
     const addedUserFavoriteComment = await Users.addUserFavoriteComment(req.params.id, comment.id)
 

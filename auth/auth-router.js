@@ -48,46 +48,42 @@ router.post('/signup', async (req, res, next) => {
       })
     }
   } catch (error) {
-    console.log(error.message)
     next(error)
   }
 
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res, next) => {
   // implement login
   const { email, password } = req.body
 
-  // console.log(`***users post /login***`)
-  // console.log(email)
-  // console.log(password)
-
   if (isValid(req.body)) {
-    Users.findBy({ email })
-      .then(([user]) => {
+    try {
+      const [user] = await Users.findBy({ email })
 
-        // console.log(`--inside findBy .then--`)
-        // console.log(user)
+      // compare the password the hash stored in the database
+      if (user && bcryptjs.compareSync(password, user.password)) {
 
-        // compare the password the hash stored in the database
-        if (user && bcryptjs.compareSync(password, user.password)) {
-          const token = makeJwt(user)
-          res.status(200).json({
-            user: {
-              id: user.id,
-              firstName: user.first_name,
-              lastName: user.last_name,
-              email: user.email,
-            }, token
-          })
-        } else {
-          res.status(404).json({ message: "Invalid credentials" })
-        }
-      })
-      .catch(error => {
-        res.status(500).json({ message: error.message })
-      })
-  } else {
+        const token = makeJwt(user)
+
+        res.status(200).json({
+          user: {
+            id: user.id,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+          }, token
+        })
+
+      }
+      else {
+        console.log(`inside Users else`)
+        res.status(404).json({ message: "Invalid credentials" })
+      }
+    } catch (error) { next(error) }
+
+  }
+  else {
     res.status(404).json({
       message: "please provide email and password and the password shoud be alphanumeric",
     })

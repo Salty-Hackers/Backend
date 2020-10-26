@@ -12,7 +12,6 @@ const commentsRouter = require(`../comments/comments-router`)
 // start the server
 const server = express()
 
-
 // third-party middleware
 server.use(helmet())
 server.use(cors())
