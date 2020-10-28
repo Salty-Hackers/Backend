@@ -10,7 +10,6 @@ const Comments = require('../comments/comments-model')
 // get user data
 router.get("/", restricted, async (req, res, next) => {
   try {
-    console.log(`in get /`)
     const users = await Users.find()
 
     if (users.length) {
@@ -29,8 +28,14 @@ router.get('/:id', restricted, validateUserId, (req, res, next) => {
 
 router.get('/:id/comments', restricted, validateUserId, async (req, res, next) => {
   try {
+    console.log(`in id.comments`)
+
     let userData = await Users.findById(req.params.id)
+    console.log(`stops here`)
+
     const userComments = await Users.userCommentsById(req.params.id)
+    console.log(`stops here`)
+
     userData = {
       ...userData,
       userComments
