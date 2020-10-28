@@ -49,11 +49,9 @@ async function updateUser(id, newUserData) {
   return findById(id)
 }
 function userCommentsById(id) {
-  return db("users as u")
-    .select('c.*')
-    .join('comments as c', 'u.id', 'c.user_id')
-    .orderBy("u.id")
-    .where({ 'u.id': id })
+  return db("comments")
+    .select('comment')
+    .where({ 'saltiest_hacker_id': id })
 }
 async function deleteUser(id) {
 
