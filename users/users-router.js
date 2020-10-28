@@ -40,7 +40,7 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
       ...userData,
       userComments
     }
-    delete userData.password
+
     if (userComments.length) {
       res.status(200).json(userData)
     } else {
