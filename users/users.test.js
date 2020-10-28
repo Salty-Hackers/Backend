@@ -45,10 +45,16 @@ describe("/api/users", () => {
 
     it("get /comments 200", async () => {
         const res = await supertest(server)
-            .get(`/api/users/1/comments`)
+            .get(`/api/users/4/comments`)
 
-        expect(res.body).toMatch(/error/i)
-        console.log(res.body)
+
+        expect(res.body).toEqual(expect.any(Object))
+        expect(res.status).toBe(200)
+
+        expect(res.body.email).toMatch(/yrus_Hahn/i)
+        expect(res.body.first_name).toMatch(/Jayda/i)
+        expect(res.body.last_name).toMatch(/Koelpin/i)
+        expect(res.body.password).not.toEqual(expect.any(String))
     })
 
 

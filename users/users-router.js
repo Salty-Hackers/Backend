@@ -28,14 +28,10 @@ router.get('/:id', restricted, validateUserId, (req, res, next) => {
 
 router.get('/:id/comments', restricted, validateUserId, async (req, res, next) => {
   try {
-    console.log(`in id.comments`)
 
-    let userData = await Users.findById(req.params.id)
-    console.log(`stops here`)
+    let [userData] = await Users.findById(req.params.id)
 
     const userComments = await Users.userCommentsById(req.params.id)
-    console.log(`stops here`)
-
     userData = {
       ...userData,
       userComments
@@ -158,10 +154,10 @@ function validateEntryData(req, res, next) {
 
 function validateUserId(req, res, next) {
   Users.findById(req.params.id)
-    .then((user) => {
+    .then(([user]) => {
       if (user) {
         //get users store and pass it down to the other router so they don't have to make a 2 call
-        delete user.password
+        // delete user.password
         req.user = user
         next()
       } else {

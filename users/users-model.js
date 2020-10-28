@@ -90,7 +90,7 @@ function findBy(filter) {
 
 async function add(user) {
   try {
-    const [id] = await db("users").select("id", "first_name", "last_name", "email").insert(user, "id")
+    const [id] = await db("users").insert(user, "id")
 
     return findById(id)
   } catch (error) {
@@ -99,7 +99,6 @@ async function add(user) {
 }
 
 function findById(id) {
-  return db("users")
-    .where({ id })
-    .first()
+  return db("users").select("id", "first_name", "last_name", "email").where("id", id)
+
 }
