@@ -147,8 +147,8 @@ describe(`/api/users`, () => {
             const res = await supertest(server)
                 .get(`/api/users/1/favoritecomments`)
                 .set(`authorization`, token)
-            expect(res.status).toBe(404)
             expect(res.body).toEqual(expect.any(Object))
+            expect(res.status).toBe(404)
             expect(res.body.password).toEqual(undefined)
             expect(res.body).toMatchObject({
                 message: /user has no favorite comments/i

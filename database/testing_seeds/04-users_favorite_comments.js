@@ -6,7 +6,7 @@ exports.seed = function (knex) {
   // Inserts seed entries
   return knex('favorite_comments').insert([
     {
-      user_id: 1,
+      user_id: 2,
       comment_id: 6,
     },
     {

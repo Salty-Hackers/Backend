@@ -51,8 +51,7 @@ router.get('/:id/comments', restricted, validateUserId, async (req, res, next) =
 //update user information
 router.put("/:id", restricted, validateUpdateData, validateUserId, (req, res, next) => {
   Users.updateUser(req.params.id, req.body)
-    .then(updatedUser => {
-      delete updatedUser.password
+    .then(([updatedUser]) => {
       res.status(200).json({ updatedUser })
     })
     .catch(next)
@@ -78,13 +77,12 @@ router.delete("/:id", restricted, validateUserId, (req, res, next) => {
 // user favorites comments
 router.get('/:id/favoritecomments', restricted, validateUserId, async (req, res, next) => {
   try {
-    let userData = await Users.findById(req.params.id)
+    let [userData] = await Users.findById(req.params.id)
     const userFavoriteComments = await Users.findUserFavoriteComments(req.params.id)
     userData = {
       ...userData,
       userFavoriteComments
     }
-    delete userData.password
     if (userFavoriteComments.length) {
       res.status(200).json(userData)
     } else {
@@ -130,27 +128,7 @@ function validateUpdateData(req, res, next) {
   }
   next()
 }
-function validateEntryData(req, res, next) {
 
-  if (!req.body.first_name && !req.body.last_name && !req.body.email && !req.body.password) {
-    res.status(404).json({ error: `first_name, last_name, email, and password are require` })
-  }
-
-  const email = {
-    email: req.body.email
-  }
-  Users.findBy(email)
-    .then(([user]) => {
-      if (user) {
-        res.status(404).json({ error: `Email not unique` })
-      } else {
-        next()
-      }
-    })
-    .catch(next)
-
-
-}
 
 function validateUserId(req, res, next) {
   Users.findById(req.params.id)
