@@ -56,12 +56,14 @@ router.delete("/:id", restricted, validateCommentsId, (req, res, next) => {
     .catch(next)
 })
 
-router.put("/:id", restricted, validateData, validateCommentsId, (req, res, next) => {
-  Comments.updateComment(req.params.id, req.body)
-    .then(updateComment => {
-      res.status(200).json({ updateComment })
-    })
-    .catch(next)
+router.put("/:id", restricted, validateData, validateCommentsId, async (req, res, next) => {
+  try {
+    const updateComment = await Comments.updateComment(req.params.id, req.body)
+    res.status(200).json({ updateComment })
+  } catch (error) {
+    next(error)
+  }
+
 })
 
 
