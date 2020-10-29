@@ -6,8 +6,6 @@ const prepTestDB = require("../helpers/prepTestDB")
 
 //mock authentication
 const restrict = require("../auth/authenticate-middleware")
-const supertest = require("supertest")
-const { post } = require("../api/server")
 jest.mock("../auth/authenticate-middleware")
 
 //apply a static state for all tests
@@ -43,7 +41,7 @@ describe("/api/users", () => {
     })
 
     it("get /comments 200", async () => {
-        const res = await supertest(server)
+        const res = await request(server)
             .get(`/api/users/4/comments`)
 
 
@@ -76,7 +74,7 @@ describe("/api/users", () => {
     })
 
     it(`post /:id/favoritecomments/:comment_id 200`, async () => {
-        const res = await supertest(server).
+        const res = await request(server).
             post(`/api/users/4/favoritecomments/1`)
 
         expect(res.body).toEqual(expect.any(Object))
@@ -85,7 +83,7 @@ describe("/api/users", () => {
     })
 
     it(`delete /:id/favoritecomments/:comment_id 200`, async () => {
-        const res = await supertest(server)
+        const res = await request(server)
             .delete(`/api/users/4/favoritecomments/5`)
 
         expect(res.body).toEqual(expect.any(Object))
@@ -94,7 +92,7 @@ describe("/api/users", () => {
         expect(res.body.deletedUserFavoriteComment.comment).toEqual(expect.anything())
     })
     it(`delete /:id/favoritecomments/:comment_id 404 invalid id`, async () => {
-        const res = await supertest(server)
+        const res = await request(server)
             .delete(`/api/users/5/favoritecomments/1`)
 
         expect(res.status).toBe(404)
@@ -104,7 +102,7 @@ describe("/api/users", () => {
 
     //delete a user by id
     it(`delete /:id 200`, async () => {
-        const res = await supertest(server)
+        const res = await request(server)
             .delete(`/api/users/1`)
 
         expect(res.status).toBe(200)
@@ -113,7 +111,7 @@ describe("/api/users", () => {
 
     //update a user
     it(`put 200 user updated`, async () => {
-        const res = await supertest(server)
+        const res = await request(server)
             .put(`/api/users/4`)
             .send({
                 first_name: `royer`,
