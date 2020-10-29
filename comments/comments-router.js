@@ -4,25 +4,18 @@ const Comments = require("./comments-model")
 const restricted = require("../auth/authenticate-middleware")
 
 // Comments endpoints
-router.get("/", restricted, (req, res, next) => {
+router.get("/", restricted, async (req, res, next) => {
+  try {
+    const comments = await Comments.find()
+    if (comments.length) {
+      res.status(200).json(comments)
+    } else {
+      res.status(404).json({ message: 'no comments found' })
+    }
+  } catch (error) {
+    next(error)
+  }
 
-  // console.log('comments get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
-
-  Comments.find()
-    .then(comments => {
-
-      // console.log(`inside findBy`)
-      // console.log(comments)
-
-      if (comments.length) {
-        res.status(200).json(comments)
-      } else {
-        res.status(404).json({ message: 'no comments found' })
-      }
-    })
-    .catch(next)
 })
 
 router.get('/:id', restricted, validateCommentsId, (req, res, next) => {
