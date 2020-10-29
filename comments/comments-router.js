@@ -18,24 +18,9 @@ router.get("/", restricted, async (req, res, next) => {
 
 })
 
-router.get('/:id', restricted, validateCommentsId, (req, res, next) => {
-  // console.log('Comments get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
+router.get('/:id', restricted, validateCommentsId, async (req, res, next) => {
+  res.status(200).json(req.comment)
 
-  Comments.findById(req.params.id)
-    .then((comment) => {
-
-      // console.log(`inside findBy`)
-      // console.log(comment)
-
-      if (comment) {
-        res.status(200).json(comment)
-      } else {
-        res.status(404).json({ message: 'no comment found' })
-      }
-    })
-    .catch(next)
 })
 router.post('/', restricted, validateData, (req, res, next) => {
   Comments.add(req.body)
@@ -88,17 +73,19 @@ function validateData(req, res, next) {
   }
   next()
 }
-function validateCommentsId(req, res, next) {
-  Comments.findById(req.params.id)
-    .then((comment) => {
-      if (comment) {
-        req.comment = comment
-        next()
-      } else {
-        res.status(404).json({ error: `Invalid ID` })
-      }
-    })
-    .catch(next)
+async function validateCommentsId(req, res, next) {
+  try {
+    const comment = await Comments.findById(req.params.id)
+    if (comment) {
+      req.comment = comment
+      next()
+    } else {
+      res.status(404).json({ error: `Comment does not exist` })
+    }
+  } catch (error) {
+    next(error)
+  }
+
 }
 module.exports = router
 
