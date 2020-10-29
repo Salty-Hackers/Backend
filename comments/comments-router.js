@@ -37,23 +37,15 @@ router.post('/', restricted, validateData, (req, res, next) => {
     })
     .catch(next)
 })
-router.delete("/:id", restricted, validateCommentsId, (req, res, next) => {
+router.delete("/:id", restricted, validateCommentsId, async (req, res, next) => {
+  try {
+    const deleteComment = await Comments.deleteComment(req.params.id)
+    res.status(200).json({ deleteComment })
 
-  // console.log('Comments get /')
-  // console.log(req.jwt)
-  // console.log(req.jwt.department)
+  } catch (error) {
+    next(error)
+  }
 
-  Comments.deleteComment(req.params.id)
-    .then((deleteComment) => {
-
-      // console.log(`inside findBy`)
-      // console.log(deleteComment)
-
-      //take away the returning password
-      res.status(200).json({ deleteComment })
-
-    })
-    .catch(next)
 })
 
 router.put("/:id", restricted, validateData, validateCommentsId, async (req, res, next) => {
