@@ -20,22 +20,20 @@ router.get("/", restricted, async (req, res, next) => {
 
 router.get('/:id', restricted, validateCommentsId, async (req, res, next) => {
   res.status(200).json(req.comment)
-
 })
-router.post('/', restricted, validateData, (req, res, next) => {
-  Comments.add(req.body)
-    .then((addedComment) => {
 
-      //   console.log(`inside findBy`)
-      //   console.log(addedComment)
+router.post('/', restricted, validateData, async (req, res, next) => {
+  try {
+    const addedComment = await Comments.add(req.body)
+    if (addedComment) {
+      res.status(200).json(addedComment)
+    } else {
+      res.status(404).json({ message: 'no user comments found' })
+    }
+  } catch (error) {
+    next(error)
+  }
 
-      if (addedComment) {
-        res.status(200).json(addedComment)
-      } else {
-        res.status(404).json({ message: 'no user comments found' })
-      }
-    })
-    .catch(next)
 })
 router.delete("/:id", restricted, validateCommentsId, async (req, res, next) => {
   try {
