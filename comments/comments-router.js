@@ -56,8 +56,6 @@ router.put("/:id", restricted, validateData, validateCommentsId, async (req, res
 
 })
 
-
-
 // local middleware
 function validateData(req, res, next) {
   if (!req.body.comment && !req.body.negativity && !req.body.user_id) {
